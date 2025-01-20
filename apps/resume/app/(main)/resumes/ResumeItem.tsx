@@ -15,6 +15,7 @@ import { Dialog, DialogContent, DialogDescription, DialogTitle } from "@resume/u
 import { DialogFooter, DialogHeader } from "@resume/ui/dialog";
 import { useReactToPrint } from "react-to-print"
 import LoadingButton from "components/LoadingButton";
+import Template1 from "../editor/Templates/Template1";
 
 interface ResumeItemProps {
     resume: ResumeServerData
@@ -52,11 +53,14 @@ export default function ResumeItem({resume}: ResumeItemProps) {
                     href={`/editor?resumeId=${resume.id}`} 
                     className="relative inline-block w-full"
                 >
-                    <ResumePreview 
+                    {/* <ResumePreview 
                         resumeData={mapToResumeValues(resume)}
                         contentRef={contentRef}
                         className="overflow-hidden shadow-sm grouo-hover:shadow-lg transition-shadow"
-                    />
+                    /> */}
+                    <Template1  resumeData={mapToResumeValues(resume)}
+                        contentRef={contentRef}
+                        className="overflow-hidden shadow-sm grouo-hover:shadow-lg transition-shadow"/>
                     <div className="absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-white to-transparent" />
                 </Link>
             </div>

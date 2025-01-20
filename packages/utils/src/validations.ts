@@ -75,6 +75,21 @@ export const summarySchema = z.object({
 
 export type SummaryValues = z.infer<typeof summarySchema>
 
+export const projectSchema = z.object({
+  projects: z.array(
+    z.object({
+      name: optionalString,
+      role: optionalString,
+      startDate: optionalString,
+      endDate: optionalString,
+      description: optionalString
+    })
+  )
+  .optional()
+})
+
+export type ProjectValues = z.infer<typeof projectSchema>
+
 export const resumeSchema = z.object({
   ...generalInfoSchema.shape,
   ...personalInfoSchema.shape,
@@ -82,6 +97,7 @@ export const resumeSchema = z.object({
   ...educationSchema.shape,
   ...skillsSchema.shape,
   ...summarySchema.shape,
+  ...projectSchema.shape,
   colorHex: optionalString,
   borderStyle: optionalString
 })
@@ -90,3 +106,4 @@ export type ResumeValues = Omit<z.infer<typeof resumeSchema>, "photo"> & {
   id?: string;
   photo?: File | string | null;
 }
+

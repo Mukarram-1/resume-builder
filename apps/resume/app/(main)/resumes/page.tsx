@@ -20,24 +20,25 @@ export const metadata: Metadata = {
 export default async function Home() {
 
   const session = await auth();
+  console.log("session",session);
 
   const [resumes, totalCount] = await Promise.all([
     prisma.resume.findMany({
       where: {
-        userid: session?.user?.id,
+        userid: "cm5zfpun50000oc5k59uqz5lh",
       },
       orderBy: {
-        updatedAt: 'desc'
+        updatedAt: "desc",
       },
-      include: resumeDataIncludes
+      include: resumeDataIncludes,
     }),
     prisma.resume.count({
       where: {
-        userid: session?.user?.id
-      }
-    })
-  ])
-  
+        userid: "cm5zfpun50000oc5k59uqz5lh",
+      },
+    }),
+  ]);
+  console.log("resumes",resumes);
   return (
     <main className="max-w-7xl mx-auto w-full px-3 py-6 space-y-6">
       <div className="flex justify-end">

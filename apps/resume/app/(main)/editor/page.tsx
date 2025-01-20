@@ -16,16 +16,17 @@ export default async function Home({ searchParams } : PageProps) {
     const { resumeId } = await searchParams;
 
     const session = await auth();
-
+    
 
     // if(!session?.user) toast('Please login') 
 
-    const resumeToEdit = resumeId ? 
-        await prisma.resume.findUnique({
-            where: { id: resumeId, userid: session?.user.id},
-            include: resumeDataIncludes
-        }) : null
-        
+    const resumeToEdit = resumeId
+      ? await prisma.resume.findUnique({
+          where: { id: resumeId, userid: "cm5zfpun50000oc5k59uqz5lh" },
+          include: resumeDataIncludes,
+        })
+      : null;
+    console.log("resume to edit",resumeToEdit);
     return (
         <ResumeEditor resumeToEdit={resumeToEdit}/>
     )

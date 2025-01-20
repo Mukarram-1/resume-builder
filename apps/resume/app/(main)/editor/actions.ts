@@ -72,7 +72,7 @@ export async function saveResume(values: ResumeValues) {
         return prisma.resume.create({
             data: {
               ...resumeValues,
-              userid: session?.user?.id!,
+              userid: "cm5zfpun50000oc5k59uqz5lh",
               photoUrl: newPhotoUrl,
               WorkExperience: {
                 create: workExperiences?.map((exp) => ({
