@@ -44,22 +44,22 @@ export default function Template1({
             {(resumeData.linkedinUsername || resumeData.githubUsername) && (
               <ProfilesSection resumeData={resumeData} />
             )}
-            {resumeData.skills?.length > 0 && (
+            {(resumeData.skills?.length??0) > 0 && (
               <SkillsSection resumeData={resumeData} />
             )}
-            {resumeData.certifications?.length > 0 && (
+            {(resumeData.certifications?.length??0) > 0 && (
               <CertificationsSection resumeData={resumeData} />
             )}
-            {resumeData.projects?.length > 0 && (
+            {(resumeData.projects?.length??0) > 0 && (
               <ProjectsSection resumeData={resumeData} />
             )}
           </div>
           <div className="space-y-6">
             {resumeData.summary && <SummarySection resumeData={resumeData} />}
-            {resumeData.workExperiences?.length > 0 && (
+            {(resumeData.workExperiences?.length??0) > 0 && (
               <ExperienceSection resumeData={resumeData} />
             )}
-            {resumeData.educations?.length > 0 && (
+            {(resumeData.educations?.length??0) > 0 && (
               <EducationSection resumeData={resumeData} />
             )}
           </div>
@@ -228,15 +228,14 @@ function ExperienceSection({ resumeData }: ResumeSectionProps) {
               <div className="text-right">
                 {(exp.startDate || exp.endDate) && (
                   <p className="text-sm">
-                    {exp.startDate && formatDate(exp.startDate, "MMMM yyyy")}
-                    {exp.startDate && exp.endDate && " - "}
+                    {exp.startDate && formatDate(exp.startDate, "MM/yyyy")} -{" "}
                     {exp.endDate
-                      ? formatDate(exp.endDate, "MMMM yyyy")
+                      ? formatDate(exp.endDate, "MM/yyyy")
                       : "Present"}
                   </p>
                 )}
-                {exp.location && (
-                  <p className="text-sm text-gray-800">{exp.location}</p>
+                {(resumeData.city||resumeData.country) && (
+                  <p className="text-sm text-gray-800">{resumeData.city}, {resumeData.country}</p>
                 )}
               </div>
             </div>
@@ -274,10 +273,9 @@ function EducationSection({ resumeData }: ResumeSectionProps) {
               <div className="text-right">
                 {(edu.startDate || edu.endDate) && (
                   <p className="text-sm">
-                    {edu.startDate && formatDate(edu.startDate, "MMMM yyyy")}
-                    {edu.startDate && edu.endDate && " - "}
+                    {edu.startDate && formatDate(edu.startDate, "MM/yyyy")} -{" "}
                     {edu.endDate
-                      ? formatDate(edu.endDate, "MMMM yyyy")
+                      ? formatDate(edu.endDate, "MM/yyyy")
                       : "Present"}
                   </p>
                 )}
