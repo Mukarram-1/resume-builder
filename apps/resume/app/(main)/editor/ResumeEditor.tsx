@@ -13,6 +13,11 @@ import useUnloadWarning from "@resume/ui/hooks/use-unload-warning";
 import type { ResumeServerData } from "utils/types";
 import { mapToResumeValues } from "utils/utils";
 import TemplateSelector from "./TemplateSelector";
+import {
+  ResizableHandle,
+  ResizablePanel,
+  ResizablePanelGroup,
+} from "@resume/ui/resizable";
 
 interface ResumeEditorProps {
   resumeToEdit: ResumeServerData | null;
@@ -29,7 +34,6 @@ export default function ResumeEditor({ resumeToEdit }: ResumeEditorProps) {
   const [selectedTemplate, setSelectedTemplate] = useState(1);
 
   const { isSaving, hasUnsavedData } = useAutoSaveReume(resumeData);
-  console.log(isSaving, hasUnsavedData);
 
   useUnloadWarning(hasUnsavedData);
 
@@ -46,39 +50,66 @@ export default function ResumeEditor({ resumeToEdit }: ResumeEditorProps) {
   )?.component;
 
   return (
-    <div className="flex grow flex-col">
-      <main className="relative grow w-full">
-        <div className="absolute bottom-0 top-0 flex w-full gap-4">
-          <div
-            className={cn(
-              "w-full p-3 overflow-y-auto space-y-12 [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:bg-gray-700 [&::-webkit-scrollbar-thumb]:bg-gray-500 [&::-webkit-scrollbar-thumb]:rounded-full",
-              showResumePreviewOnSmallScreen && "hidden"
-            )}
+    <div className="flex grow flex-col h-screen">
+      <main className="relative grow w-full overflow-hidden">
+        <div className="absolute inset-0">
+          <ResizablePanelGroup
+            direction="horizontal"
+            className="h-full rounded-lg"
           >
-            <Breadcrumbs
-              currentStep={currentStep}
-              setCurrentStep={setCurrentStep}
-            />
-            {FormComponent && (
-              <FormComponent
-                resumeData={resumeData}
-                setResumeData={setResumeData}
-              />
-            )}
-          </div>
-          <ResumePreviewSection
-            resumeData={resumeData}
-            setResumeData={setResumeData}
-            className={cn(
-              //   "w-[calc(50%-1rem)]",
-              showResumePreviewOnSmallScreen && "flex"
-            )}
-            selectedTemplate={selectedTemplate}
-          />
-          <TemplateSelector
-            onSelectTemplate={setSelectedTemplate}
-            className="w-[calc(25%-1rem)]"
-          />
+            <ResizablePanel
+              defaultSize={120}
+              minSize={20}
+              className={cn(
+                "flex flex-col",
+                showResumePreviewOnSmallScreen && "hidden"
+              )}
+            >
+              <div className="flex-1 min-h-0">
+                <div className="h-full p-3 overflow-y-auto space-y-12 [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:bg-gray-700 [&::-webkit-scrollbar-thumb]:bg-gray-500 [&::-webkit-scrollbar-thumb]:rounded-full">
+                  <Breadcrumbs
+                    currentStep={currentStep}
+                    setCurrentStep={setCurrentStep}
+                  />
+                  {FormComponent && (
+                    <FormComponent
+                      resumeData={resumeData}
+                      setResumeData={setResumeData}
+                    />
+                  )}
+                </div>
+              </div>
+            </ResizablePanel>
+            <ResizableHandle withHandle />
+            <ResizablePanel
+              defaultSize={50}
+              className={cn(
+                "flex flex-col overflow-hidden",
+                showResumePreviewOnSmallScreen && "flex"
+              )}
+            >
+              <div className="flex-1 min-h-0 overflow-y-auto [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:bg-gray-700 [&::-webkit-scrollbar-thumb]:bg-gray-500 [&::-webkit-scrollbar-thumb]:rounded-full">
+                <ResumePreviewSection
+                  resumeData={resumeData}
+                  setResumeData={setResumeData}
+                  selectedTemplate={selectedTemplate}
+                />
+              </div>
+            </ResizablePanel>
+            <ResizableHandle withHandle />
+            <ResizablePanel
+              defaultSize={18}
+              minSize={10}
+              className="flex flex-col overflow-hidden"
+            >
+              <div className="flex-1 min-h-0 overflow-y-auto [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:bg-gray-700 [&::-webkit-scrollbar-thumb]:bg-gray-500 [&::-webkit-scrollbar-thumb]:rounded-full">
+                <TemplateSelector
+                  onSelectTemplate={setSelectedTemplate}
+                  className="h-full"
+                />
+              </div>
+            </ResizablePanel>
+          </ResizablePanelGroup>
         </div>
       </main>
       <Footer

@@ -240,7 +240,7 @@ function ExperienceSection({ resumeData }: ResumeSectionProps) {
               </div>
             </div>
             {exp.description && (
-              <ul className="list-disc list-inside text-sm text-gray-800">
+              <ul className="list-disc list-inside text-sm text-gray-800 break-all whitespace-pre-wrap">
                 {exp.description
                   .split("\n")
                   .map((item, i) => item && <li key={i}>{item}</li>)}

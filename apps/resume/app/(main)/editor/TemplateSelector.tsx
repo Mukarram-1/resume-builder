@@ -19,6 +19,9 @@ const templates = [
   { number: 9, src: "/assets/images/template 9.jpg" },
   { number: 10, src: "/assets/images/template 10.jpg" },
   { number: 11, src: "/assets/images/template 11.jpg" },
+  { number: 12, src: "/assets/images/template 12.png" },
+  { number: 13, src: "/assets/images/template 13.png" },
+  { number: 14, src: "/assets/images/template 14.png" },
 ];
 
 export default function TemplateSelector({

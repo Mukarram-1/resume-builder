@@ -14,6 +14,9 @@ import Template8 from "./Templates/Template8";
 import Template9 from "./Templates/Template9";
 import Template10 from "./Templates/Template10";
 import Template11 from "./Templates/Template11";
+import Template12 from "./Templates/Template12";
+import Template13 from "./Templates/Template13";
+import Template14 from "./Templates/Template14";
 
 interface ResumePreviewSectionProps {
     resumeData: ResumeValues;
@@ -40,6 +43,9 @@ export default function ResumePreviewSection({
       Template9,
       Template10,
       Template11,
+      Template12,
+      Template13,
+      Template14
     ];
     const TemplateComponent = templates[selectedTemplate] || Template1;
   return (
@@ -65,7 +71,8 @@ export default function ResumePreviewSection({
     // </div>
     <div
       className={cn(
-        "group relative hidden w-1/2 md:flex bg-secondary",
+        // "group relative hidden w-1/2 md:flex bg-secondary",
+        "group relative hidden w-full md:flex bg-secondary",
         className
       )}
     >
