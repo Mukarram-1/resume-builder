@@ -13,6 +13,7 @@ import useUnloadWarning from "@resume/ui/hooks/use-unload-warning";
 import type { ResumeServerData } from "utils/types";
 import { mapToResumeValues } from "utils/utils";
 import TemplateSelector from "./TemplateSelector";
+import DOMPurify from "dompurify";
 import {
   ResizableHandle,
   ResizablePanel,
@@ -32,6 +33,34 @@ export default function ResumeEditor({ resumeToEdit }: ResumeEditorProps) {
   const [showResumePreviewOnSmallScreen, setShowResumePreviewOnSmallScreen] =
     useState(false);
   const [selectedTemplate, setSelectedTemplate] = useState(1);
+
+const handleSetResumeData = (newData: ResumeValues) => {
+  if (newData.summary && typeof newData.summary === "string") {
+    const sanitizedSummary = DOMPurify.sanitize(newData.summary, {
+      ALLOWED_TAGS: [
+        "p",
+        "br",
+        "b",
+        "i",
+        "em",
+        "strong",
+        "u",
+        "strike",
+        "ul",
+        "ol",
+        "li",
+      ],
+      ALLOWED_ATTR: [],
+    });
+
+    setResumeData({
+      ...newData,
+      summary: sanitizedSummary,
+    });
+  } else {
+    setResumeData(newData);
+  }
+};
 
   const { isSaving, hasUnsavedData } = useAutoSaveReume(resumeData);
 
@@ -74,7 +103,7 @@ export default function ResumeEditor({ resumeToEdit }: ResumeEditorProps) {
                   {FormComponent && (
                     <FormComponent
                       resumeData={resumeData}
-                      setResumeData={setResumeData}
+                      setResumeData={handleSetResumeData}
                     />
                   )}
                 </div>
@@ -91,7 +120,7 @@ export default function ResumeEditor({ resumeToEdit }: ResumeEditorProps) {
               <div className="flex-1 min-h-0 overflow-y-auto [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:bg-gray-700 [&::-webkit-scrollbar-thumb]:bg-gray-500 [&::-webkit-scrollbar-thumb]:rounded-full">
                 <ResumePreviewSection
                   resumeData={resumeData}
-                  setResumeData={setResumeData}
+                  setResumeData={handleSetResumeData}
                   selectedTemplate={selectedTemplate}
                 />
               </div>
@@ -118,7 +147,7 @@ export default function ResumeEditor({ resumeToEdit }: ResumeEditorProps) {
         showResumePreviewOnSmallScreen={showResumePreviewOnSmallScreen}
         setShowResumePreviewOnSmallScreen={setShowResumePreviewOnSmallScreen}
         resumeData={resumeData}
-        setResumeData={setResumeData}
+        setResumeData={handleSetResumeData}
         isSaving={isSaving}
       />
     </div>

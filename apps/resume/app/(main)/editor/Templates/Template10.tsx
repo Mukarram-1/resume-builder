@@ -48,7 +48,7 @@ export default function Template10({
             {(resumeData.skills?.length ?? 0) > 0 && (
               <SkillsSection resumeData={resumeData} />
             )}
-            {(resumeData.certificates?.length ?? 0) > 0 && (
+            {(resumeData.certifications?.length ?? 0) > 0 && (
               <CertificatesSection resumeData={resumeData} />
             )}
             {(resumeData.educations?.length ?? 0) > 0 && (
@@ -77,7 +77,11 @@ function HeaderSection({ resumeData }: ResumeSectionProps) {
         {firstName} {lastName}
       </h1>
       <h2 className="text-xl text-gray-600 mb-4">{jobTitle}</h2>
-      <p className="leading-relaxed break-all whitespace-pre-wrap">{summary}</p>
+      {/* <p className="leading-relaxed break-all whitespace-pre-wrap">{summary}</p> */}
+      <div
+        className="text-sm summary-content [&_p]:mb-2 [&_ul]:list-disc [&_ul]:ml-4 [&_ol]:list-decimal [&_ol]:ml-4 [&_li]:mb-1 [&_strong]:font-semibold [&_em]:italic break-all whitespace-pre-wrap"
+        dangerouslySetInnerHTML={{ __html: resumeData.summary || "" }}
+      />
     </header>
   );
 }
@@ -170,36 +174,19 @@ function SkillsSection({ resumeData }: ResumeSectionProps) {
 }
 
 function CertificatesSection({ resumeData }: ResumeSectionProps) {
-  const certificates = [
-    {
-      name: "Certified Phlebotomy Technician",
-      organization: "National Healthcare Association",
-    },
-    {
-      name: "CPR & First Aid Training",
-      organization: "eCPRcertification.com",
-    },
-    {
-      name: "Medical Billing and Coding Certification",
-      organization: "American Academy of Professional Coders (AAPC)",
-    },
-    {
-      name: "Certified Medical Assistant",
-      organization: "American Association of Medical Assistants (AAMA)",
-    }
-  ];
+  const {certifications} = resumeData
 
   return (
     <section className="mb-8">
       <h2 className="text-2xl font-bold text-gray-800 mb-4">CERTIFICATES</h2>
       <div className="space-y-3">
-        {certificates.map((cert, index) => (
+        {certifications?.map((cert, index) => (
           <div key={index}>
             <div className="flex items-center gap-2">
               <span className="font-semibold text-gray-800">{cert.name}</span>
               <Link2 className="w-4 h-4 text-gray-600" />
             </div>
-            <p className="text-sm text-gray-600 italic">{cert.organization}</p>
+            <p className="text-sm text-gray-600 italic">{cert.source}</p>
           </div>
         ))}
       </div>
@@ -227,21 +214,16 @@ function EducationSection({ resumeData }: ResumeSectionProps) {
 }
 
 function LanguagesSection({ resumeData }: ResumeSectionProps) {
-  const languages = [
-    { name: "English", level: "Native or Bilingual Proficiency" },
-    { name: "Spanish", level: "Native or Bilingual Proficiency" },
-    { name: "French", level: "Professional Working Proficiency" },
-    { name: "Italian", level: "Professional Working Proficiency" },
-  ];
+  const {languages} = resumeData;
 
   return (
     <section>
       <h2 className="text-2xl font-bold text-gray-800 mb-4">LANGUAGES</h2>
       <div className="grid grid-cols-2 gap-4">
-        {languages.map((lang, index) => (
+        {languages?.map((lang, index) => (
           <div key={index}>
             <h3 className="font-semibold text-gray-800">{lang.name}</h3>
-            <p className="text-sm text-gray-600 italic">{lang.level}</p>
+            <p className="text-sm text-gray-600 italic">{lang.proficiency}</p>
           </div>
         ))}
       </div>

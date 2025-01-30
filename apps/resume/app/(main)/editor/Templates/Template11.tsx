@@ -21,12 +21,16 @@ interface ResumePreviewProps {
   resumeData: ResumeValues;
   contentRef?: React.Ref<HTMLDivElement>;
   className?: string;
+  primaryColor?: string;
+  secondaryColor?: string;
 }
 
 export default function Template11({
   resumeData,
   contentRef,
   className,
+  primaryColor = "#2D3748",
+  secondaryColor = "#40C4AA",
 }: ResumePreviewProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const { width } = useDimensions(containerRef);
@@ -47,29 +51,29 @@ export default function Template11({
         ref={contentRef}
         id="resumePreviewContent"
       >
-        {resumeData.firstName && <HeaderSection resumeData={resumeData} />}
-        {resumeData.email && <ContactSection resumeData={resumeData} />}
+        {resumeData.firstName && <HeaderSection resumeData={resumeData} primaryColor={primaryColor} secondaryColor={secondaryColor}/>}
+        {resumeData.email && <ContactSection resumeData={resumeData} primaryColor={primaryColor} secondaryColor={secondaryColor}/>}
         <div className="grid grid-cols-[1.6fr_1fr] gap-8 p-8">
           <div className="space-y-8">
             {(resumeData.workExperiences?.length ?? 0) > 0 && (
-              <WorkExperienceSection resumeData={resumeData} />
+              <WorkExperienceSection resumeData={resumeData} primaryColor={primaryColor} secondaryColor={secondaryColor}/>
             )}
             {resumeData.volunteer && (
               <VolunteerSection resumeData={resumeData} />
             )}
             {(resumeData.educations?.length ?? 0) > 0 && (
-              <EducationSection resumeData={resumeData} />
+              <EducationSection resumeData={resumeData} primaryColor={primaryColor} secondaryColor={secondaryColor}/>
             )}
           </div>
           <div className="bg-gray-100 p-6 rounded space-y-8">
             {(resumeData.skills?.length ?? 0) > 0 && (
-              <ExpertiseSection resumeData={resumeData} />
+              <ExpertiseSection resumeData={resumeData} primaryColor={primaryColor} secondaryColor={secondaryColor}/>
             )}
-            {(resumeData.courses?.length ?? 0) > 0 && (
-              <CoursesSection resumeData={resumeData} />
+            {(resumeData.certifications?.length ?? 0) > 0 && (
+              <CoursesSection resumeData={resumeData} primaryColor={primaryColor} secondaryColor={secondaryColor}/>
             )}
             {(resumeData.languages?.length ?? 0) > 0 && (
-              <LanguagesSection resumeData={resumeData} />
+              <LanguagesSection resumeData={resumeData} primaryColor={primaryColor} secondaryColor={secondaryColor}/>
             )}
           </div>
         </div>
@@ -81,14 +85,14 @@ export default function Template11({
 interface ResumeSectionProps {
   resumeData: ResumeValues;
 }
-function SectionIcon({ icon: Icon }: { icon: any }) {
+function SectionIcon({ icon: Icon,primaryColor }: { icon: any,primaryColor?:string }) {
   return (
-    <div className="w-8 h-8 rounded-full bg-gray-800 flex items-center justify-center">
+    <div className="w-8 h-8 rounded-full flex items-center justify-center" style={{backgroundColor:primaryColor}}>
       <Icon className="w-6 h-6 text-white" />
     </div>
   );
 }
-function HeaderSection({ resumeData }: ResumeSectionProps) {
+function HeaderSection({ resumeData,secondaryColor }: ResumePreviewProps) {
   const { firstName, lastName, jobTitle } = resumeData;
 
   return (
@@ -96,24 +100,28 @@ function HeaderSection({ resumeData }: ResumeSectionProps) {
       <h1 className="text-4xl text-gray-800 mb-2">
         {firstName} {lastName}
       </h1>
-      <h2 className="text-xl text-[#40C4AA]">{jobTitle}</h2>
+      <h2 className={`text-xl text-[${secondaryColor}]`}>{jobTitle}</h2>
     </header>
   );
 }
 
-function ContactSection({ resumeData }: ResumeSectionProps) {
+function ContactSection({ resumeData,primaryColor,secondaryColor }: ResumePreviewProps) {
   const { email, phone, city, linkedin, summary,country } = resumeData;
 
   return (
     <div className="space-y-0 p-2">
       {summary && (
-        <div className="bg-[#2D3748] text-white p-4 rounded-lg rounded-b-none">
-          <p className="leading-relaxed break-all whitespace-pre-wrap">
+        <div className=" text-white p-4 rounded-lg rounded-b-none" style={{backgroundColor:primaryColor}}>
+          {/* <p className="leading-relaxed break-all whitespace-pre-wrap">
             {summary}
-          </p>
+          </p> */}
+          <div
+            className="text-sm summary-content [&_p]:mb-2 [&_ul]:list-disc [&_ul]:ml-4 [&_ol]:list-decimal [&_ol]:ml-4 [&_li]:mb-1 [&_strong]:font-semibold [&_em]:italic break-all whitespace-pre-wrap"
+            dangerouslySetInnerHTML={{ __html: resumeData.summary || "" }}
+          />
         </div>
       )}
-      <div className="bg-[#40C4AA] text-white mt-6 p-4 flex items-center justify-center gap-8 rounded-b-lg">
+      <div className=" text-white mt-6 p-4 flex items-center justify-center gap-8 rounded-b-lg" style={{backgroundColor:secondaryColor}}>
         {email && (
           <div className="flex items-center gap-2">
             <Mail className="w-5 h-5" />
@@ -145,18 +153,18 @@ function ContactSection({ resumeData }: ResumeSectionProps) {
   );
 }
 
-function WorkExperienceSection({ resumeData }: ResumeSectionProps) {
+function WorkExperienceSection({ resumeData,primaryColor,secondaryColor }: ResumePreviewProps) {
   return (
     <section>
       <div className="flex items-center gap-2 mb-6">
-              <SectionIcon icon={Briefcase} />
-              <h2 className="text-xl font-bold">WORK EXPERIENCE</h2>
-            </div>
+        <SectionIcon icon={Briefcase} primaryColor={primaryColor} />
+        <h2 className="text-xl font-bold">WORK EXPERIENCE</h2>
+      </div>
       {resumeData.workExperiences?.map((exp, index) => (
         <div key={index} className="mb-6">
           <h3 className="font-bold text-lg">{exp.position}</h3>
           <div className="font-medium mb-1 text-lg">{exp.company}</div>
-          <div className="flex justify-between text-[#40C4AA] text-sm mb-2 italic">
+          <div className="flex justify-between text-sm mb-2 italic" style={{color:secondaryColor}}>
             <span>
               {exp.startDate && formatDate(exp.startDate, "MMMM yyyy")} -{" "}
               {exp.endDate ? formatDate(exp.endDate, "MMMM yyyy") : "Present"}
@@ -165,7 +173,12 @@ function WorkExperienceSection({ resumeData }: ResumeSectionProps) {
               {resumeData.city}, {resumeData.country}
             </span>
           </div>
-          <ul className="list-disc list-inside marker:text-[#40C4AA] space-y-2 text-gray-600 break-all whitespace-pre-wrap">
+          <ul
+            className="list-disc list-inside space-y-2 text-gray-600 break-all whitespace-pre-wrap"
+            style={
+              { "--tw-marker-color": secondaryColor } as React.CSSProperties
+            }
+          >
             {exp.description?.split("\n").map((item, i) => (
               <li key={i}>
                 <span>{item}</span>
@@ -206,19 +219,19 @@ function VolunteerSection({ resumeData }: ResumeSectionProps) {
   );
 }
 
-function EducationSection({ resumeData }: ResumeSectionProps) {
+function EducationSection({ resumeData,primaryColor,secondaryColor }: ResumePreviewProps) {
     const { educations } = resumeData;
   return (
     <section>
       <div className="flex items-center gap-2 mb-6">
-        <SectionIcon icon={GraduationCap} />
+        <SectionIcon icon={GraduationCap} primaryColor={primaryColor}/>
         <h2 className="text-xl font-bold">EDUCATION</h2>
       </div>
       {educations?.map((edu, index) => (
         <div key={index}>
           <h3 className="font-bold text-gray-800">{edu.school}</h3>
           <p className="text-gray-700">{edu.degree}</p>
-          <p className="text-gray-600 text-sm text-[#40C4AA] italic">
+          <p className="text-sm italic" style={{color:secondaryColor}}>
             {edu.startDate && formatDate(edu.startDate, "MMMM yyyy")} -{" "}
             {edu.endDate ? formatDate(edu.endDate, "MMMM yyyy") : "Present"}
           </p>
@@ -228,13 +241,13 @@ function EducationSection({ resumeData }: ResumeSectionProps) {
   );
 }
 
-function ExpertiseSection({ resumeData }: ResumeSectionProps) {
+function ExpertiseSection({ resumeData,primaryColor,secondaryColor }: ResumePreviewProps) {
   const {skills} = resumeData;
 
   return (
     <section>
       <div className="flex items-center gap-2 mb-6">
-        <SectionIcon icon={Award} />
+        <SectionIcon icon={Award} primaryColor={primaryColor}/>
         <h2 className="text-xl font-bold">AREAS OF EXPERTIES</h2>
       </div>
       <ul className="space-y-2">
@@ -249,38 +262,21 @@ function ExpertiseSection({ resumeData }: ResumeSectionProps) {
   );
 }
 
-function CoursesSection({ resumeData }: ResumeSectionProps) {
-  const courses = [
-    {
-      name: "Content Marketing, SEO and PPC (2019)",
-      organization: "SEMRUSH Academy",
-    },
-    {
-      name: "Inbound Marketing & Contextual Marketing (2018)",
-      organization: "HubSpot",
-    },
-    {
-      name: "Email Marketing & Sales Funnels (2018)",
-      organization: "ClickMinded Digital Marketing",
-    },
-    {
-      name: "Google Digital Marketing Courses (2017)",
-      organization: "Digital Garage",
-    },
-  ];
+function CoursesSection({ resumeData,primaryColor,secondaryColor}: ResumePreviewProps) {
+  const {certifications} = resumeData;
 
   return (
     <section>
       <div className="flex items-center gap-2 mb-6">
-        <SectionIcon icon={Book} />
+        <SectionIcon icon={Book} primaryColor={primaryColor}/>
         <h2 className="text-xl font-bold">COURSE & TRAINING</h2>
       </div>
       <div className="space-y-3">
-        {courses.map((course, index) => (
+        {certifications?.map((course, index) => (
           <div key={index}>
-            <div className="font-medium text-[#40C4AA]">{course.name}</div>
+            <div className="font-medium" style={{color:secondaryColor}}>{course.name}</div>
             <div className="text-sm text-gray-600 italic">
-              {course.organization}
+              {course.source}
             </div>
           </div>
         ))}
@@ -289,24 +285,20 @@ function CoursesSection({ resumeData }: ResumeSectionProps) {
   );
 }
 
-function LanguagesSection({ resumeData }: ResumeSectionProps) {
-  const languages = [
-    { name: "English", level: "Native or Bilingual Proficiency" },
-    { name: "Spanish", level: "Full Professional Proficiency" },
-    { name: "Mandarin", level: "Limited Working Proficiency" },
-  ];
+function LanguagesSection({ resumeData,primaryColor,secondaryColor }: ResumePreviewProps) {
+  const {languages} = resumeData;
 
   return (
     <section>
       <div className="flex items-center gap-2 mb-6">
-        <SectionIcon icon={Globe2} />
+        <SectionIcon icon={Globe2} primaryColor={primaryColor}/>
         <h2 className="text-xl font-bold">LANGUAGES</h2>
       </div>
       <div className="space-y-3">
-        {languages.map((lang, index) => (
+        {languages?.map((lang, index) => (
           <div key={index}>
             <div className="font-medium">{lang.name}</div>
-            <div className="text-sm text-[#40C4AA]">{lang.level}</div>
+            <div className="text-sm" style={{color:secondaryColor}}>{lang.proficiency}</div>
           </div>
         ))}
       </div>

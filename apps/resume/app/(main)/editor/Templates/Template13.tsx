@@ -69,8 +69,8 @@ export default function Template13({
           {(resumeData.projects?.length ?? 0) > 0 && (
             <ProjectsSection resumeData={resumeData} />
           )}
-          {(resumeData.awards?.length ?? 0) > 0 && (
-            <AwardsSection resumeData={resumeData} />
+          {(resumeData.certifications?.length ?? 0) > 0 && (
+            <CertificationsSection resumeData={resumeData} />
           )}
         </div>
       </div>
@@ -155,7 +155,11 @@ function SummarySection({ resumeData }: ResumeSectionProps) {
   return (
     <section>
       <h2 className="font-bold mb-2 uppercase">Professional Summary</h2>
-      <p className="text-sm break-all whitespace-pre-wrap">{summary}</p>
+      {/* <p className="text-sm break-all whitespace-pre-wrap">{summary}</p> */}
+      <div
+        className="text-sm summary-content [&_p]:mb-2 [&_ul]:list-disc [&_ul]:ml-4 [&_ol]:list-decimal [&_ol]:ml-4 [&_li]:mb-1 [&_strong]:font-semibold [&_em]:italic break-all whitespace-pre-wrap"
+        dangerouslySetInnerHTML={{ __html: resumeData.summary || "" }}
+      />
     </section>
   );
 }
@@ -256,35 +260,20 @@ function ProjectsSection({ resumeData }: ResumeSectionProps) {
   );
 }
 
-function AwardsSection({ resumeData }: ResumeSectionProps) {
+function CertificationsSection({ resumeData }: ResumeSectionProps) {
+  const { certifications } = resumeData;
+
   return (
     <section>
-      <h2 className="font-bold mb-2 uppercase">Awards and Accolades</h2>
+      <h2 className="font-bold mb-2 uppercase">Certifications</h2>
       <div className="space-y-4">
-        <div>
-          <div className="text-sm font-bold">
-            Competition Name, YYYY | Award Name, out of X teams/participants
+        {certifications?.map((cert, index) => (
+          <div key={index}>
+            <div className="text-sm mb-1">
+              {cert.name}, {cert.completionDate} | {cert.source}
+            </div>
           </div>
-          <ul className="list-disc list-inside text-sm space-y-1">
-            <li>
-              [Action verb] + what you did + reason, outcome or quantified
-              results
-            </li>
-            <li>Talk about features built and technologies used</li>
-          </ul>
-        </div>
-        <div>
-          <div className="text-sm font-bold">
-            Competition Name, YYYY | Award Name, out of X teams/participants
-          </div>
-          <ul className="list-disc list-inside text-sm space-y-1">
-            <li>
-              [Action verb] + what you did + reason, outcome or quantified
-              results
-            </li>
-            <li>Talk about features built and technologies used</li>
-          </ul>
-        </div>
+        ))}
       </div>
     </section>
   );

@@ -25,6 +25,8 @@ const LottieAnimation = ({ srcIndex }: ILottieAnimationProps) => {
     { data: linkedAnimationData, label: 'Linked Animation' },
     { data: diagnosisAnimationData, label: 'Diagnosis Animation' },
     { data: logoutAnimationData, label: 'Logout Animation' },
+    { data: logoutAnimationData, label: 'Projects animation'},
+    { data: dashboardAnimationData, label: 'certitifications animation'}
   ];
   const [animationIndex, setAnimationIndex] = useState(0);
 

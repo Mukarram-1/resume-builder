@@ -63,8 +63,8 @@ export default function Template12({
         {(resumeData.projects?.length ?? 0) > 0 && (
           <ProjectsSection resumeData={resumeData} />
         )}
-        {(resumeData.awards?.length ?? 0) > 0 && (
-          <AwardsSection resumeData={resumeData} />
+        {(resumeData.certifications?.length ?? 0) > 0 && (
+          <CertificationsSection resumeData={resumeData} />
         )}
       </div>
     </div>
@@ -133,7 +133,11 @@ function SummarySection({ resumeData }: ResumeSectionProps) {
   return (
     <section className="mb-6">
       <h2 className="text-sm font-bold mb-2 uppercase">Professional Summary</h2>
-      <p className="text-sm break-all whitespace-pre-wrap">{summary}</p>
+      {/* <p className="text-sm break-all whitespace-pre-wrap">{summary}</p> */}
+      <div
+        className="text-sm summary-content [&_p]:mb-2 [&_ul]:list-disc [&_ul]:ml-4 [&_ol]:list-decimal [&_ol]:ml-4 [&_li]:mb-1 [&_strong]:font-semibold [&_em]:italic break-all whitespace-pre-wrap"
+        dangerouslySetInnerHTML={{ __html: resumeData.summary || "" }}
+      />
     </section>
   );
 }
@@ -251,24 +255,22 @@ function ProjectsSection({ resumeData }: ResumeSectionProps) {
   );
 }
 
-function AwardsSection({ resumeData }: ResumeSectionProps) {
-  const awards = [
-    { name: "Hackathon - Prize", year: "YYYY" },
-    { name: "Hackathon - Prize", year: "YYYY" },
-    { name: "Hackathon - Prize", year: "YYYY" },
-  ];
+function CertificationsSection({ resumeData }: ResumeSectionProps) {
+  const { certifications } = resumeData;
+  console.log(certifications)
 
   return (
     <section>
-      <h2 className="text-sm font-bold mb-2 uppercase">Awards and Accolades</h2>
-      <ul className="list-disc list-inside text-sm space-y-1">
-        {awards.map((award, index) => (
-          <li key={index} className="flex justify-between">
-            <span>{award.name}</span>
-            <span>{award.year}</span>
-          </li>
+      <h2 className="text-sm font-bold mb-2 uppercase">Certifications</h2>
+      <div className="space-y-4">
+        {certifications?.map((cert, index) => (
+          <div key={index}>
+            <div className="text-sm mb-1">
+              {cert.name}, {cert.completionDate} | {cert.source}
+            </div>
+          </div>
         ))}
-      </ul>
+      </div>
     </section>
   );
 }

@@ -11,12 +11,15 @@ interface ResumePreviewProps {
   resumeData: ResumeValues;
   contentRef?: React.Ref<HTMLDivElement>;
   className?: string;
+  primaryColor?: string;
+  secondaryColor?: string;
 }
 
 export default function Template4({
   resumeData,
   contentRef,
   className,
+  primaryColor = "#003366",
 }: ResumePreviewProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const { width } = useDimensions(containerRef);
@@ -41,25 +44,36 @@ export default function Template4({
         id="resumePreviewContent"
       >
         <div className="space-y-6">
-          {resumeData.email && <PersonalInfoSection resumeData={resumeData} />}
-          {(resumeData.skills?.length ?? 0) > 0 && (
-            <SkillsSection resumeData={resumeData} />
+          {resumeData.email && (
+            <PersonalInfoSection resumeData={resumeData} primaryColor={primaryColor} />
           )}
-          {(resumeData.softwares?.length??0)>0 && <SoftwareSection resumeData={resumeData} />}
-          {(resumeData.languages?.length??0)>0 && <LanguagesSection resumeData={resumeData} />}
+          {(resumeData.skills?.length ?? 0) > 0 && (
+            <SkillsSection resumeData={resumeData} primaryColor={primaryColor}/>
+          )}
+          {/* {(resumeData.softwares?.length ?? 0) > 0 && (
+            <SoftwareSection resumeData={resumeData} />
+          )} */}
+          {(resumeData.languages?.length ?? 0) > 0 && (
+            <>
+              <LanguagesSection resumeData={resumeData} primaryColor={primaryColor}/>
+              <hr className="border-t border-gray-300 my-4" />
+            </>
+          )}
         </div>
         <div className="space-y-6">
           <SummarySection resumeData={resumeData} />
-          {(resumeData.workExperiences?.length??0)>0 && (
-            <ExperienceSection resumeData={resumeData} />
+          {(resumeData.workExperiences?.length ?? 0) > 0 && (
+            <ExperienceSection resumeData={resumeData} primaryColor={primaryColor}/>
           )}
-          {(resumeData.educations?.length??0)>0 && (
-            <EducationSection resumeData={resumeData} />
+          {(resumeData.educations?.length ?? 0) > 0 && (
+            <EducationSection resumeData={resumeData} primaryColor={primaryColor}/>
           )}
-          {(resumeData.cerfiticates?.length??0)>0 && (
-            <CertificatesSection resumeData={resumeData} />
+          {(resumeData.certifications?.length ?? 0) > 0 && (
+            <CertificatesSection resumeData={resumeData} primaryColor={primaryColor}/>
           )}
-          {(resumeData.interests?.length??0)>0 && <InterestsSection resumeData={resumeData} />}
+          {/* {(resumeData.interests?.length ?? 0) > 0 && (
+            <InterestsSection resumeData={resumeData} />
+          )} */}
         </div>
       </div>
     </div>
@@ -68,6 +82,7 @@ export default function Template4({
 
 interface ResumeSectionProps {
   resumeData: ResumeValues;
+  primaryColor?: string;
 }
 
 function RatingDots({ rating }: { rating: number }) {
@@ -86,14 +101,19 @@ function RatingDots({ rating }: { rating: number }) {
   );
 }
 
-function PersonalInfoSection({ resumeData }: ResumeSectionProps) {
+function PersonalInfoSection({ resumeData,primaryColor }: ResumeSectionProps) {
   return (
     <section>
-      <h2 className="text-[#003366] font-bold text-lg mb-3">• Personal Info</h2>
+      <h2 className="font-bold text-lg mb-3" style={{ color:primaryColor }}>
+        • Personal Info
+      </h2>
       <div className="space-y-2 text-sm">
         {(resumeData.city || resumeData.country) && (
           <div className="flex items-center gap-1">
-            <MapPin className="w-5 h-5 border-1 rounded-full text-white bg-blue-950 text-center p-[3px]" />
+            <MapPin
+              className="w-5 h-5 border-1 rounded-full text-white text-center p-[3px]"
+              style={{ backgroundColor: primaryColor }}
+            />
             <p>
               {resumeData.city}, {resumeData.country}
             </p>
@@ -101,25 +121,28 @@ function PersonalInfoSection({ resumeData }: ResumeSectionProps) {
         )}
         {resumeData.phone && (
           <div className="flex items-center gap-1">
-            <Phone className="w-5 h-5 border-1 rounded-full text-white bg-blue-950 text-center p-[3px]" />
+            <Phone
+              className="w-5 h-5 border-1 rounded-full text-white text-center p-[3px]"
+              style={{ backgroundColor: primaryColor }}
+            />
             <p>{resumeData.phone}</p>
           </div>
         )}
         {resumeData.email && (
           <div className="flex items-center gap-1">
-            <Mail className="w-5 h-5 border-1 rounded-full text-white bg-blue-950 text-center p-[3px]" />
+            <Mail className="w-5 h-5 border-1 rounded-full text-white text-center p-[3px]" style={{backgroundColor:primaryColor}}/>
             <p>{resumeData.email}</p>
           </div>
         )}
         {resumeData.website && (
           <div className="flex items-center gap-1">
-            <Link className="w-5 h-5 border-1 rounded-full text-white bg-blue-950 text-center p-[3px]" />
+            <Link className="w-5 h-5 border-1 rounded-full text-white text-center p-[3px]" style={{backgroundColor:primaryColor}}/>
             <p>{resumeData.website}</p>
           </div>
         )}
         {resumeData.linkedin && (
           <div className="flex items-center gap-1">
-            <Linkedin className="w-5 h-5 border-1 rounded-full text-white bg-blue-950 text-center p-[3px]" />
+            <Linkedin className="w-5 h-5 border-1 rounded-full text-white text-center p-[3px]" style={{backgroundColor:primaryColor}}/>
             <p>{resumeData.linkedin}</p>
           </div>
         )}
@@ -182,20 +205,26 @@ function SummarySection({ resumeData }: ResumeSectionProps) {
       )}
       {resumeData.summary && (
         <div className="max-w-full overflow-hidden">
-          <p className="text-sm text-gray-800 break-all whitespace-pre-wrap">
+          {/* <p className="text-sm text-gray-800 break-all whitespace-pre-wrap">
             {resumeData.summary}
-          </p>
+          </p> */}
+          <div
+            className="text-sm text-gray-800 summary-content [&_p]:mb-2 [&_ul]:list-disc [&_ul]:ml-4 [&_ol]:list-decimal [&_ol]:ml-4 [&_li]:mb-1 [&_strong]:font-semibold [&_em]:italic break-all whitespace-pre-wrap"
+            dangerouslySetInnerHTML={{ __html: resumeData.summary || "" }}
+          />
         </div>
       )}
     </section>
   );
 }
-function SkillsSection({ resumeData }: ResumeSectionProps) {
+function SkillsSection({ resumeData,primaryColor }: ResumeSectionProps) {
   const {skills} = resumeData
 
   return (
     <section>
-      <h2 className="text-[#003366] font-bold text-lg mb-3">• Skills</h2>
+      <h2 className="font-bold text-lg mb-3" style={{ color:primaryColor }}>
+        • Skills
+      </h2>
       <ul className="list-none space-y-2">
         {skills &&
           skills.map((skill, index) => (
@@ -242,12 +271,12 @@ function SoftwareSection({ resumeData }: ResumeSectionProps) {
   );
 }
 
-function ExperienceSection({ resumeData }: ResumeSectionProps) {
+function ExperienceSection({ resumeData,primaryColor }: ResumeSectionProps) {
  return (
    <div className="mt-4">
      {/* Section Header */}
      <div className="flex items-center mb-4">
-       <div className="text-blue-900 font-bold">• Experience</div>
+       <div className=" font-bold" style={{primaryColor}}>• Experience</div>
      </div>
 
      {/* Experience Items */}
@@ -274,12 +303,14 @@ function ExperienceSection({ resumeData }: ResumeSectionProps) {
  );
 }
 
-function EducationSection({ resumeData }: ResumeSectionProps) {
+function EducationSection({ resumeData,primaryColor }: ResumeSectionProps) {
    return (
      <div className="mt-4">
        {/* Section Header */}
        <div className="flex items-center mb-4">
-         <div className="text-blue-900 font-bold">• Education</div>
+         <div className=" font-bold" style={{ color:primaryColor }}>
+           • Education
+         </div>
        </div>
 
        {/* Education Items */}
@@ -304,50 +335,50 @@ function EducationSection({ resumeData }: ResumeSectionProps) {
    );
 }
 
-function CertificatesSection({ resumeData }: ResumeSectionProps) {
-  const certificates = [
-    { name: "PMP - Project Management Institute", year: "2010-05" },
-    { name: "CAPM - Project Management Institute", year: "2007-11" },
-    { name: "PRINCE2® Foundation", year: "2003-04" },
-  ];
+function CertificatesSection({ resumeData,primaryColor }: ResumeSectionProps) {
+  const {certifications} = resumeData
 
   return (
     <div className="mt-4">
-      {/* Section Header */}
       <div className="flex items-center mb-4">
-        <div className="text-blue-900 font-bold">• Certificates</div>
+        <div className="font-bold" style={{ color:primaryColor }}>
+          • Certificates
+        </div>
       </div>
 
       {/* Certificates Items */}
       <div className="space-y-2">
-        {certificates.map((cert, index) => (
-          <div key={index} className="flex">
-            <div className="w-24 flex-shrink-0 text-gray-600 text-sm">
-              {cert.date}
+        {certifications &&
+          certifications.map((cert, index) => (
+            <div key={index} className="flex items-center justify-center">
+              <div className="w-24 flex-shrink-0 text-gray-600 text-sm">
+                {cert.completionDate}
+              </div>
+              <div className="flex-1 text-gray-700">{cert.name}</div>
             </div>
-            <div className="flex-1 text-gray-700">{cert.name}</div>
-          </div>
-        ))}
+          ))}
       </div>
     </div>
   );
 }
 
-function LanguagesSection({ resumeData }: ResumeSectionProps) {
-  const languages = [
-    { name: "English", level: "Native", rating: 5 },
-    { name: "Spanish", level: "Basic", rating: 2 },
-  ];
+function LanguagesSection({ resumeData,primaryColor }: ResumeSectionProps) {
+  const {languages} = resumeData;
 
   return (
     <section>
-      <h2 className="text-[#003366] font-bold text-lg mb-3">• Languages</h2>
+      <h2
+        className="font-bold text-lg mb-3"
+        style={{ color:primaryColor }}
+      >
+        • Languages
+      </h2>
       <div className="space-y-3">
-        {languages.map((lang, index) => (
+        {languages?.map((lang, index) => (
           <div key={index} className="space-y-1">
             <p className="text-sm">{lang.name}</p>
-            <RatingDots rating={lang.rating} />
-            <p className="text-xs text-gray-600">{lang.level}</p>
+            {/* <RatingDots rating={lang.rating} /> */}
+            <p className="text-xs text-gray-600">{lang.proficiency}</p>
           </div>
         ))}
       </div>

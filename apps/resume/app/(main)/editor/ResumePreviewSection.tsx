@@ -80,6 +80,8 @@ export default function ResumePreviewSection({
         <div className="flex justify-center h-auto w-full">
           <TemplateComponent
             resumeData={resumeData}
+            primaryColor={resumeData.primaryColorHex}
+            secondaryColor={resumeData.secondaryColorHex}
             className="max-w-2xl shadow-md h-auto"
           />
         </div>

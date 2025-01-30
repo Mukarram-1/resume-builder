@@ -1,10 +1,11 @@
 import { Button } from "@resume/ui/button";
 import { Form } from "@resume/ui/form";
 import { EditorFormProps } from "utils/types";
-import { projectSchema, ProjectValues } from "utils/validations";
+import { certificationSchema, CertificationValues } from "utils/validations";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
+import CertificationItem from "../CertificationItem";
 import { Plus } from "lucide-react";
 import {
   closestCenter,
@@ -22,16 +23,15 @@ import {
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
 import { restrictToVerticalAxis } from "@dnd-kit/modifiers";
-import ProjectItem from "../ProjectItem";
 
-export default function ProjectForm({
+export default function CertificationForm({
   resumeData,
   setResumeData,
 }: EditorFormProps) {
-  const form = useForm<ProjectValues>({
-    resolver: zodResolver(projectSchema),
+  const form = useForm<CertificationValues>({
+    resolver: zodResolver(certificationSchema),
     defaultValues: {
-      projects: resumeData.projects || [],
+      certifications: resumeData.certifications || [],
     },
   });
 
@@ -41,10 +41,8 @@ export default function ProjectForm({
       if (!isValid) return;
       setResumeData({
         ...resumeData,
-        projects:
-          values?.projects?.filter(
-            (project) => project !== undefined
-          ) || [],
+        certifications:
+          values?.certifications?.filter((c) => c !== undefined) || [],
       });
     });
 
@@ -53,7 +51,7 @@ export default function ProjectForm({
 
   const { fields, append, remove, move } = useFieldArray({
     control: form.control,
-    name: "projects",
+    name: "certifications",
   });
 
   const sensors = useSensors(
@@ -65,12 +63,9 @@ export default function ProjectForm({
 
   function handleDragEnd(event: DragEndEvent) {
     const { active, over } = event;
-    console.log(event);
-
     if (over && active.id !== over.id) {
-      const oldIndex = fields.findIndex((field) => field.id === active.id);
-      const newIndex = fields.findIndex((field) => field.id === over.id);
-
+      const oldIndex = fields.findIndex((f) => f.id === active.id);
+      const newIndex = fields.findIndex((f) => f.id === over.id);
       move(oldIndex, newIndex);
       return arrayMove(fields, oldIndex, newIndex);
     }
@@ -79,9 +74,9 @@ export default function ProjectForm({
   return (
     <div className="max-w-xl mx-auto space-y-6">
       <div className="space-y-1.5 text-center">
-        <h2 className="text-2xl font-semibold">Projects</h2>
-        <p className="text-sm text-muted-foregroun">
-          Add as many projects as you like.
+        <h2 className="text-2xl font-semibold">Certifications</h2>
+        <p className="text-sm text-muted-foreground">
+          Add professional certifications and credentials
         </p>
       </div>
 
@@ -97,16 +92,15 @@ export default function ProjectForm({
               items={fields}
               strategy={verticalListSortingStrategy}
             >
-              {fields &&
-                fields.map((field, index) => (
-                  <ProjectItem
-                    id={field.id}
-                    key={field.id}
-                    index={index}
-                    form={form}
-                    remove={remove}
-                  />
-                ))}
+              {fields.map((field, index) => (
+                <CertificationItem
+                  id={field.id}
+                  key={field.id}
+                  index={index}
+                  form={form}
+                  remove={remove}
+                />
+              ))}
             </SortableContext>
           </DndContext>
           <div className="flex justify-center">
@@ -115,15 +109,13 @@ export default function ProjectForm({
               onClick={() =>
                 append({
                   name: "",
-                  role: "",
-                  startDate: "",
-                  endDate: "",
-                  description: "",
+                  source: "",
+                  link: "",
                 })
               }
             >
               <Plus />
-              Add Project
+              Add Certification
             </Button>
           </div>
         </form>

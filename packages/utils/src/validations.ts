@@ -90,6 +90,31 @@ export const projectSchema = z.object({
 
 export type ProjectValues = z.infer<typeof projectSchema>
 
+export const languageSchema = z.object({
+  languages: z.array(
+    z.object({
+      name: optionalString,
+      proficiency: z.enum(["native", "professional"]).optional()
+    })
+  )
+  .optional()
+});
+
+export type LanguageValues = z.infer<typeof languageSchema>
+
+export const certificationSchema = z.object({
+  certifications: z.array(
+    z.object({
+      name: optionalString,
+      completionDate: optionalString,
+      source: optionalString,
+      link: z.string().url("Invalid URL").optional().or(z.literal("")),
+    })
+  ).optional()
+});
+
+export type CertificationValues = z.infer<typeof certificationSchema>;
+
 export const resumeSchema = z.object({
   ...generalInfoSchema.shape,
   ...personalInfoSchema.shape,
@@ -98,7 +123,11 @@ export const resumeSchema = z.object({
   ...skillsSchema.shape,
   ...summarySchema.shape,
   ...projectSchema.shape,
-  colorHex: optionalString,
+  ...languageSchema.shape,
+  ...certificationSchema.shape,
+  // colorHex: optionalString,
+  primaryColorHex: optionalString,
+  secondaryColorHex: optionalString,
   borderStyle: optionalString
 })
 

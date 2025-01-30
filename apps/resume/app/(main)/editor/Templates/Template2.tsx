@@ -1,11 +1,12 @@
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { formatDate } from "date-fns";
-import { MapPin, Phone, Mail, Link2, Linkedin, Github } from "lucide-react";
+import { MapPin, Phone, Mail, Link2, Linkedin, Github,LinkIcon } from "lucide-react";
 
 import useDimensions from "@resume/ui/hooks/use-dimensions";
 import cn from "@resume/ui/cn";
 import { ResumeValues } from "utils/validations";
+import Link from "next/link";
 
 interface ResumePreviewProps {
   resumeData: ResumeValues;
@@ -60,51 +61,51 @@ export default function Template2({
           </>
         )}
 
-        {resumeData.workExperiences?.length > 0 && (
+        {(resumeData.workExperiences?.length??0) > 0 && (
           <>
             <WorkExperienceSection resumeData={resumeData} />
             <hr className="border-t border-gray-300 my-4" />
           </>
         )}
 
-        {resumeData.educations?.length > 0 && (
+        {(resumeData.educations?.length??0) > 0 && (
           <>
             <EducationSection resumeData={resumeData} />
             <hr className="border-t border-gray-300 my-4" />
           </>
         )}
 
-        {resumeData.projects?.length > 0 && (
+        {(resumeData.projects?.length??0) > 0 && (
           <>
             <ProjectsSection resumeData={resumeData} />
             <hr className="border-t border-gray-300 my-4" />
           </>
         )}
 
-        {resumeData.skills?.length > 0 && (
+        {(resumeData.skills?.length??0) > 0 && (
           <>
             <SkillsSection resumeData={resumeData} />
             <hr className="border-t border-gray-300 my-4" />
           </>
         )}
 
-        {resumeData.certifications?.length > 0 && (
+        {(resumeData.certifications?.length??0) > 0 && (
           <>
             <CertificationsSection resumeData={resumeData} />
             <hr className="border-t border-gray-300 my-4" />
           </>
         )}
 
-        {resumeData.languages?.length > 0 && (
+        {(resumeData.languages?.length ?? 0) > 0 && (
           <>
             <LanguagesSection resumeData={resumeData} />
             <hr className="border-t border-gray-300 my-4" />
           </>
         )}
 
-        {resumeData.references?.length > 0 && (
+        {/* {(resumeData.references?.length??0) > 0 && (
           <ReferencesSection resumeData={resumeData} />
-        )}
+        )} */}
       </div>
     </div>
   );
@@ -193,13 +194,15 @@ function ProfilesSection({ resumeData }: ResumeSectionProps) {
 function SummarySection({ resumeData }: ResumeSectionProps) {
   return (
     <section>
-      <h2 className="font-semibold text-lg mb-3">
-        Summary
-      </h2>
+      <h2 className="font-semibold text-lg mb-3">Summary</h2>
       <div className="max-w-full overflow-hidden">
-        <p className="text-sm text-gray-800 break-all whitespace-pre-wrap">
+        {/* <p className="text-sm text-gray-800 break-all whitespace-pre-wrap">
           {resumeData.summary}
-        </p>
+        </p> */}
+        <div
+          className="text-sm text-gray-800 [&_p]:mb-2 [&_ul]:list-disc [&_ul]:ml-4 [&_ol]:list-decimal [&_ol]:ml-4 [&_li]:mb-1 [&_strong]:font-semibold [&_em]:italic break-all whitespace-pre-wrap"
+          dangerouslySetInnerHTML={{ __html: resumeData.summary || "" }}
+        />
       </div>
     </section>
   );
@@ -312,38 +315,48 @@ function SkillsSection({ resumeData }: ResumeSectionProps) {
 }
 
 function CertificationsSection({ resumeData }: ResumeSectionProps) {
+  const { certifications } = resumeData;
   return (
     <section className="mb-6">
       <h2 className="font-bold mb-2">Certifications</h2>
       <div className="grid grid-cols-2 gap-4">
-        <div>
-          <h3 className="text-sm">Full-Stack Web Development</h3>
-          <p className="text-sm">CodeAcademy</p>
-          <p className="text-sm">2020</p>
-        </div>
-        <div>
-          <h3 className="text-sm">AWS Certified Developer</h3>
-          <p className="text-sm">Amazon Web Services</p>
-          <p className="text-sm">2019</p>
-        </div>
+        {certifications?.map((cert, index) => (
+          <div key={index}>
+            <div className="flex items-center justify-center gap-4">
+              {cert.name && <h3 className="font-bold text-sm">{cert.name}</h3>}
+              {/* {cert.link && (
+                <Link href={cert.link}>
+                  <LinkIcon className="h-[1px] w-[1px]" />
+                </Link>
+              )} */}
+            </div>
+            {cert.source && (
+              <p className="text-sm text-gray-800">{cert.source}</p>
+            )}
+            {cert.completionDate && (
+              <p className="text-sm text-gray-800">
+                {formatDate(cert.completionDate, "yyyy")}
+              </p>
+            )}
+          </div>
+        ))}
       </div>
     </section>
   );
 }
 
 function LanguagesSection({ resumeData }: ResumeSectionProps) {
+  const {languages} = resumeData
   return (
     <section className="mb-6">
       <h2 className="font-bold mb-2">Languages</h2>
       <div className="grid grid-cols-2 gap-4">
-        <div>
-          <h3 className="text-sm">English</h3>
-          <p className="text-sm">Native Speaker</p>
-        </div>
-        <div>
-          <h3 className="text-sm">Spanish</h3>
-          <p className="text-sm">Intermediate</p>
-        </div>
+        {languages?.map((lang, index) => (
+          <div key={index}>
+            <h3 className="text-sm font-bold">{lang.name}</h3>
+            <p className="text-sm">{lang.proficiency}</p>
+          </div>
+        ))}
       </div>
     </section>
   );

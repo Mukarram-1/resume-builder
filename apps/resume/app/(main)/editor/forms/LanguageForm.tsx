@@ -1,7 +1,10 @@
 import { Button } from "@resume/ui/button";
 import { Form } from "@resume/ui/form";
 import { EditorFormProps } from "utils/types";
-import { projectSchema, ProjectValues } from "utils/validations";
+import {
+    languageSchema,
+    LanguageValues,
+} from "utils/validations";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
@@ -22,16 +25,15 @@ import {
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
 import { restrictToVerticalAxis } from "@dnd-kit/modifiers";
-import ProjectItem from "../ProjectItem";
-
-export default function ProjectForm({
+import LanguageItem from "../LanguageItem";
+export default function LanguageForm({
   resumeData,
   setResumeData,
 }: EditorFormProps) {
-  const form = useForm<ProjectValues>({
-    resolver: zodResolver(projectSchema),
+  const form = useForm<LanguageValues>({
+    resolver: zodResolver(languageSchema),
     defaultValues: {
-      projects: resumeData.projects || [],
+      languages: resumeData.languages || [],
     },
   });
 
@@ -41,10 +43,8 @@ export default function ProjectForm({
       if (!isValid) return;
       setResumeData({
         ...resumeData,
-        projects:
-          values?.projects?.filter(
-            (project) => project !== undefined
-          ) || [],
+        languages:
+          values?.languages?.filter((language) => language !== undefined) || [],
       });
     });
 
@@ -53,7 +53,7 @@ export default function ProjectForm({
 
   const { fields, append, remove, move } = useFieldArray({
     control: form.control,
-    name: "projects",
+    name: "languages",
   });
 
   const sensors = useSensors(
@@ -79,9 +79,9 @@ export default function ProjectForm({
   return (
     <div className="max-w-xl mx-auto space-y-6">
       <div className="space-y-1.5 text-center">
-        <h2 className="text-2xl font-semibold">Projects</h2>
+        <h2 className="text-2xl font-semibold">Languages</h2>
         <p className="text-sm text-muted-foregroun">
-          Add as many projects as you like.
+          Add as many languages as you like.
         </p>
       </div>
 
@@ -99,7 +99,7 @@ export default function ProjectForm({
             >
               {fields &&
                 fields.map((field, index) => (
-                  <ProjectItem
+                  <LanguageItem
                     id={field.id}
                     key={field.id}
                     index={index}
@@ -123,7 +123,7 @@ export default function ProjectForm({
               }
             >
               <Plus />
-              Add Project
+              Add Language
             </Button>
           </div>
         </form>
