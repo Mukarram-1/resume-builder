@@ -5,6 +5,7 @@ import { FileIcon as FileUserIcon, PenLineIcon } from "lucide-react";
 import cn from "@resume/ui/cn";
 import ColorPicker from "./ColorPicker";
 import BorderStyleButton from "./BorderStyleButton";
+import FontSizeSelector from "./FontSizeSelector";
 import type { ResumeValues } from "utils/validations";
 
 interface FooterProps {
@@ -88,6 +89,22 @@ export default function Footer({
             borderStyle={resumeData.borderStyle}
             onChange={(borderStyle) =>
               setResumeData({ ...resumeData, borderStyle })
+            }
+          />
+          <FontSizeSelector
+            //@ts-ignore
+            label="Primary Font Size"
+            fontSize={resumeData.primaryFontSize || "medium"}
+            onFontSizeChange={(fontSize) =>
+              setResumeData({ ...resumeData, primaryFontSize: fontSize })
+            }
+          />
+          <FontSizeSelector
+            //@ts-ignore
+            label="Secondary Font Size"
+            fontSize={resumeData.secondaryFontSize || "small"}
+            onFontSizeChange={(fontSize) =>
+              setResumeData({ ...resumeData, secondaryFontSize: fontSize })
             }
           />
           <Button variant="secondary" asChild>

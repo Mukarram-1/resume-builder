@@ -13,5 +13,13 @@ export default {
     container: {
       center: true,
     },
+    extend: {
+    colors: {
+      resume: {
+        primary: 'var(--primary-color)',
+        secondary: 'var(--secondary-color)'
+      }
+    }
+  }
   },
 } satisfies Config;

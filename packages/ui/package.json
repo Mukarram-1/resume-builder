@@ -36,6 +36,7 @@
     "./hooks/use-unload-warning": "./hooks/use-unload-warning.tsx",
     "./hooks/use-debounce": "./hooks/use-debounce.ts",
     "./hooks/use-toast": "./hooks/use-toast.ts",
+    "./hooks/useResumeColors": "./hooks/useResumeColors.ts",
     "./cn": "./lib/cn.ts",
     "./Navbar": "./src/components/Navbar.tsx",
     "./Shell": "./src/components/Shell.tsx",

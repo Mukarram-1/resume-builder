@@ -15,6 +15,7 @@ import useDimensions from "@resume/ui/hooks/use-dimensions";
 import cn from "@resume/ui/cn";
 import type { ResumeValues } from "utils/validations";
 import { BorderStyles } from "app/(main)/editor/BorderStyleButton";
+import { useResumeColors } from "@resume/ui/hooks/useResumeColors";
 
 interface ResumePreviewProps {
   resumeData: ResumeValues;
@@ -32,7 +33,7 @@ export default function Template3({
 }: ResumePreviewProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const { width } = useDimensions(containerRef);
-
+  useResumeColors(primaryColor);
   const hasMainContent = !!(
     resumeData.firstName ||
     resumeData.lastName ||
@@ -79,22 +80,22 @@ export default function Template3({
             {(resumeData.firstName ||
               resumeData.lastName ||
               resumeData.jobTitle) && (
-              <PersonalInfoHeader resumeData={resumeData} primaryColor={primaryColor} />
+              <PersonalInfoHeader resumeData={resumeData} />
             )}
             {(resumeData.linkedin || resumeData.github) && (
-              <ProfilesSection resumeData={resumeData} primaryColor={primaryColor} />
+              <ProfilesSection resumeData={resumeData}  />
             )}
             {resumeData.summary && (
-              <SummarySection resumeData={resumeData} primaryColor={primaryColor} />
+              <SummarySection resumeData={resumeData}  />
             )}
             {(resumeData.workExperiences?.length ?? 0) > 0 && (
-              <ExperienceSection resumeData={resumeData} primaryColor={primaryColor} />
+              <ExperienceSection resumeData={resumeData}  />
             )}
             {(resumeData.educations?.length ?? 0) > 0 && (
-              <EducationSection resumeData={resumeData} primaryColor={primaryColor} />
+              <EducationSection resumeData={resumeData}  />
             )}
             {(resumeData.projects?.length ?? 0) > 0 && (
-              <ProjectsSection resumeData={resumeData} primaryColor={primaryColor} />
+              <ProjectsSection resumeData={resumeData}  />
             )}
           </div>
         )}
@@ -126,13 +127,7 @@ export default function Template3({
     </div>
   );
 }
-
-interface ResumeSectionProps {
-  resumeData: ResumeValues;
-  primaryColor: string;
-}
-
-function PersonalInfoHeader({ resumeData, primaryColor }: ResumeSectionProps) {
+function PersonalInfoHeader({ resumeData }: ResumePreviewProps) {
   const {
     firstName,
     lastName,
@@ -185,7 +180,7 @@ function PersonalInfoHeader({ resumeData, primaryColor }: ResumeSectionProps) {
         <div className="flex flex-wrap gap-4 text-sm text-gray-800">
           {(city || country) && (
             <div className="flex items-center gap-1">
-              <MapPin className="w-4 h-4" style={{ color:primaryColor }} />
+              <MapPin className="w-4 h-4 text-resume-primary" />
               <span>
                 {city}
                 {city && country && ", "}
@@ -195,19 +190,23 @@ function PersonalInfoHeader({ resumeData, primaryColor }: ResumeSectionProps) {
           )}
           {phone && (
             <div className="flex items-center gap-1">
-              <Phone className="w-4 h-4" style={{ color:primaryColor }} />
+              <Phone className="w-4 h-4 text-resume-primary" />
               <span>{phone}</span>
             </div>
           )}
           {email && (
             <div className="flex items-center gap-1">
-              <Mail className="w-4 h-4" style={{ color:primaryColor }} />
+              <Mail
+                className="w-4 h-4 text-resume-primary"
+              />
               <span>{email}</span>
             </div>
           )}
           {website && (
             <div className="flex items-center gap-1">
-              <Link2 className="w-4 h-4" style={{ color:primaryColor }} />
+              <Link2
+                className="w-4 h-4 text-resume-primary"
+              />
               <span>{website}</span>
             </div>
           )}
@@ -217,34 +216,35 @@ function PersonalInfoHeader({ resumeData, primaryColor }: ResumeSectionProps) {
   );
 }
 
-function ProfilesSection({ resumeData, primaryColor }: ResumeSectionProps) {
+function ProfilesSection({ resumeData }: ResumePreviewProps) {
   const { linkedin, github } = resumeData;
 
   return (
     <section>
-      <h2
-        className="text-lg font-bold mb-3 border-b"
-        style={{ borderColor: primaryColor }}
-      >
+      <h2 className="text-lg font-bold mb-3 border-b border-resume-primary">
         Profiles
       </h2>
       <div className="flex items-center justify-between">
         <div className="flex flex-col items-center justify-center gap-2">
           <div className="flex items-center gap-2">
-            <Linkedin className="w-4 h-4" style={{ color:primaryColor }} />
-            <span className="text-sm">johndoe</span>
+            <Linkedin className="w-4 h-4 text-resume-primary" />
+            <span className="text-sm break-all whitespace-pre-wrap">
+              {linkedin}
+            </span>
           </div>
           <span className="text-sm text-gray-800">LinkedIn</span>
         </div>
         <div className="flex flex-col items-center gap-2">
           <div className="flex items-center gap-2">
-            <Github className="w-4 h-4" style={{ color:primaryColor }} />
-            <span className="text-sm">johndoe</span>
+            <Github className="w-4 h-4 text-resume-primary" />
+            <span className="text-sm break-all whitespace-pre-wrap">
+              {github}
+            </span>
           </div>
           <span className="text-sm text-gray-800">GitHub</span>
         </div>
         <div className="flex flex-col items-center gap-2">
-          <Link className="w-4 h-4" style={{ color:primaryColor }} />
+          <Link className="w-4 h-4 text-resume-primary" />
           <div className="flex items-center gap-2">
             <span className="text-sm">johndoe</span>
           </div>
@@ -259,8 +259,7 @@ function SummarySection({ resumeData, primaryColor }: ResumeSectionProps) {
   return (
     <section>
       <h2
-        className="font-semibold text-lg mb-3 border-b"
-        style={{ borderColor: primaryColor }}
+        className="font-semibold text-lg mb-3 border-b border-resume-primary"
       >
         Summary
       </h2>
@@ -277,14 +276,13 @@ function SummarySection({ resumeData, primaryColor }: ResumeSectionProps) {
   );
 }
 
-function ExperienceSection({ resumeData, primaryColor }: ResumeSectionProps) {
+function ExperienceSection({ resumeData }: ResumeSectionProps) {
   const { workExperiences } = resumeData;
 
   return (
     <section>
       <h2
-        className="text-lg font-bold mb-3 border-b"
-        style={{ borderColor: primaryColor }}
+        className="text-lg font-bold mb-3 border-b border-resume-primary"
       >
         Experience
       </h2>
@@ -318,14 +316,13 @@ function ExperienceSection({ resumeData, primaryColor }: ResumeSectionProps) {
   );
 }
 
-function EducationSection({ resumeData, primaryColor }: ResumeSectionProps) {
+function EducationSection({ resumeData }: ResumeSectionProps) {
   const { educations } = resumeData;
 
   return (
     <section>
       <h2
-        className="text-lg font-bold mb-3 border-b"
-        style={{ borderColor: primaryColor }}
+        className="text-lg font-bold mb-3 border-b border-resume-primary"
       >
         Education
       </h2>
@@ -356,8 +353,7 @@ function ProjectsSection({ resumeData, primaryColor }: ResumeSectionProps) {
   return (
     <section>
       <h2
-        className="text-lg font-bold mb-3 border-b"
-        style={{ borderColor: primaryColor }}
+        className="text-lg font-bold mb-3 border-b border-resume-primary"
       >
         Projects
       </h2>
@@ -376,7 +372,7 @@ function ProjectsSection({ resumeData, primaryColor }: ResumeSectionProps) {
   );
 }
 
-function SkillsSection({ resumeData, primaryColor }: ResumeSectionProps) {
+function SkillsSection({ resumeData }: ResumeSectionProps) {
   const { skills } = resumeData;
 
   return (
@@ -406,7 +402,7 @@ function SkillsSection({ resumeData, primaryColor }: ResumeSectionProps) {
   );
 }
 
-function CertificationsSection({ resumeData, primaryColor }: ResumeSectionProps) {
+function CertificationsSection({ resumeData }: ResumeSectionProps) {
   const { certifications } = resumeData;
   return (
     <section>
@@ -430,7 +426,7 @@ function CertificationsSection({ resumeData, primaryColor }: ResumeSectionProps)
   );
 }
 
-function LanguagesSection({ resumeData, primaryColor }: ResumeSectionProps) {
+function LanguagesSection({ resumeData }: ResumeSectionProps) {
   const { languages } = resumeData;
   return (
     <section>
@@ -449,7 +445,7 @@ function LanguagesSection({ resumeData, primaryColor }: ResumeSectionProps) {
   );
 }
 
-function ReferencesSection({ resumeData, primaryColor }: ResumeSectionProps) {
+function ReferencesSection({ resumeData }: ResumeSectionProps) {
   return (
     <section>
       <h2 className="text-lg font-bold mb-3 border-b border-white">

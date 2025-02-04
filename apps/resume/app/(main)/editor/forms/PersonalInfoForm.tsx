@@ -12,7 +12,52 @@ export default function PersonalInfoForm({
     resumeData, 
     setResumeData
 } : EditorFormProps) {
-    const fields = [{ name: "firstName", label: 'First Name', type: "text", placeholder: "Usman" }, { name: 'lastName', label: 'Last Name', type: "text", placeholder: 'Siddique' }, {name: 'email', label: 'Email', type: "email", placeholder: 'resume@gmail.com' }, { name: 'phone', label: 'Phone', type: "tel", placeholder: '+44312131223' }, { name: 'jobTitle', label: 'Job Title', type: "text", placeholder: 'Software Engineer' }, { name: 'city', label: 'City', type: "text", placeholder: 'Austin' }, { name: 'country', label: 'Country', type: "text", placeholder: 'USA' } ]
+    const fields = [
+      {
+        name: "firstName",
+        label: "First Name",
+        type: "text",
+        placeholder: "Usman",
+      },
+      {
+        name: "lastName",
+        label: "Last Name",
+        type: "text",
+        placeholder: "Siddique",
+      },
+      {
+        name: "email",
+        label: "Email",
+        type: "email",
+        placeholder: "resume@gmail.com",
+      },
+      {
+        name: "linkedin",
+        label: "LinkedIn",
+        type: "text",
+        placeholder: "www.linkedin.com",
+      },
+      {
+        name: "github",
+        label: "Github",
+        type: "text",
+        placeholder: "www.github.com",
+      },
+      {
+        name: "phone",
+        label: "Phone",
+        type: "tel",
+        placeholder: "+44312131223",
+      },
+      {
+        name: "jobTitle",
+        label: "Job Title",
+        type: "text",
+        placeholder: "Software Engineer",
+      },
+      { name: "city", label: "City", type: "text", placeholder: "Austin" },
+      { name: "country", label: "Country", type: "text", placeholder: "USA" },
+    ];
     
     const form = useForm<PersonalInfoValues>({
         resolver: zodResolver(personalInfoSchema),
@@ -21,6 +66,8 @@ export default function PersonalInfoForm({
             lastName: resumeData.lastName || "",
             jobTitle: resumeData.jobTitle || "",
             email: resumeData.email || "",
+            linkedin: resumeData.linkedin || "",
+            github: resumeData.github || "",
             city: resumeData.city || "",
             country:resumeData.country || "",
             phone: resumeData.phone || "",

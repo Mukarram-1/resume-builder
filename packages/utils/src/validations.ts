@@ -20,6 +20,8 @@ export const personalInfoSchema = z.object({
   lastName: optionalString,
   jobTitle: optionalString,
   city: optionalString,
+  linkedin: optionalString,
+  github: optionalString,
   country: optionalString,
   phone: optionalString,
   email: z.string().email('Invalid email address').optional(),
@@ -128,6 +130,8 @@ export const resumeSchema = z.object({
   // colorHex: optionalString,
   primaryColorHex: optionalString,
   secondaryColorHex: optionalString,
+  primaryFontSize: optionalString,
+  secondaryFontSize: optionalString,
   borderStyle: optionalString
 })
 

@@ -114,7 +114,7 @@ function ContactSection({ resumeData }: ResumeSectionProps) {
       {linkedin && (
         <div className="flex items-center gap-2">
           <Linkedin className="w-4 h-4" />
-          <span>{linkedin}</span>
+          <span className="break-all whitespace-pre-wrap">{linkedin}</span>
         </div>
       )}
     </div>

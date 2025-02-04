@@ -106,7 +106,7 @@ function HeaderSection({ resumeData }: ResumeSectionProps) {
             <a href={github} className="text-blue-600 hover:underline">
               {github}
             </a>{" "}
-            |{" "}
+            |{" Github"}
           </div>
         )}
         {linkedin && (
@@ -114,7 +114,7 @@ function HeaderSection({ resumeData }: ResumeSectionProps) {
             <a href={linkedin} className="text-blue-600 hover:underline">
               {linkedin}
             </a>{" "}
-            |{" "}
+            |{" Linkedin"}
           </div>
         )}
         {website && (

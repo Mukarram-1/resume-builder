@@ -11,10 +11,13 @@ import {
   Star,
   Heart,
   GraduationCap,
+  Linkedin,
+  Github,
 } from "lucide-react";
 import useDimensions from "@resume/ui/hooks/use-dimensions";
 import cn from "@resume/ui/cn";
 import type { ResumeValues } from "utils/validations";
+import { useResumeColors } from "@resume/ui/hooks/useResumeColors";
 
 interface ResumePreviewProps {
   resumeData: ResumeValues;
@@ -31,7 +34,7 @@ export default function Template7({
 }: ResumePreviewProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const { width } = useDimensions(containerRef);
-
+  useResumeColors(primaryColor);
   return (
     <div
       ref={containerRef}
@@ -49,13 +52,13 @@ export default function Template7({
         id="resumePreviewContent"
       >
         <div className="p-8 space-y-6">
-          {resumeData.firstName && <HeaderSection resumeData={resumeData} primaryColor={primaryColor}/>}
+          {resumeData.firstName && <HeaderSection resumeData={resumeData}/>}
           {resumeData.summary && <SummarySection resumeData={resumeData} />}
           {(resumeData.workExperiences?.length ?? 0) > 0 && (
-            <ExperienceSection resumeData={resumeData} primaryColor={primaryColor}/>
+            <ExperienceSection resumeData={resumeData}/>
           )}
           {(resumeData.educations?.length ?? 0) > 0 && (
-            <EducationSection resumeData={resumeData} primaryColor={primaryColor}/>
+            <EducationSection resumeData={resumeData}/>
           )}
           {(resumeData.languages?.length ?? 0) > 0 && (
             <>
@@ -64,7 +67,7 @@ export default function Template7({
             </>
           )}
         </div>
-        <div className=" text-white" style={{ backgroundColor: primaryColor }}>
+        <div className=" text-white bg-resume-primary">
           <div className="p-8 space-y-8">
             {(resumeData.keyachievements?.length ?? 0) > 0 && (
               <KeyAchievementsSection />
@@ -85,10 +88,9 @@ export default function Template7({
 
 interface ResumeSectionProps {
   resumeData: ResumeValues;
-  primaryColor?: string;
 }
 
-function HeaderSection({ resumeData,primaryColor }: ResumeSectionProps) {
+function HeaderSection({ resumeData }: ResumeSectionProps) {
    const {
      firstName,
      lastName,
@@ -96,9 +98,9 @@ function HeaderSection({ resumeData,primaryColor }: ResumeSectionProps) {
      city,
      country,
      phone,
-     photo,
+     linkedin,
      email,
-     website,
+     github,
      borderStyle,
    } = resumeData;
 
@@ -111,32 +113,40 @@ function HeaderSection({ resumeData,primaryColor }: ResumeSectionProps) {
       )}
       <div className="space-y-1">
         {jobTitle && (
-          <h2 className="font-medium text-md" style={{primaryColor}}>{jobTitle}</h2>
+          <h2 className="font-medium text-md text-resume-primary">
+            {jobTitle}
+          </h2>
         )}
         <div className="flex flex-wrap gap-4 text-sm text-gray-600">
           <div className="flex items-center gap-1">
             {phone && (
               <>
-                <Phone className="w-4 h-4" style={{primaryColor}}/>
+                <Phone className="w-4 h-4 text-resume-primary" />
                 <span>{phone}</span>
               </>
             )}
           </div>
           {email && (
             <div className="flex items-center gap-1">
-              <Mail className="w-4 h-4" style={{primaryColor}}/>
+              <Mail className="w-4 h-4 text-resume-primary" />
               <span>{email}</span>
             </div>
           )}
           {resumeData.linkedin && (
             <div className="flex items-center gap-1">
-              <Link2 className="w-4 h-4" style={{primaryColor}}/>
-              <span>{linkedin}</span>
+              <Linkedin className="w-4 h-4 text-resume-primary" />
+              <span className="break-all whitespace-pre-wrap">{linkedin}</span>
+            </div>
+          )}
+          {resumeData.github && (
+            <div className="flex items-center gap-1">
+              <Github className="w-4 h-4 text-resume-primary" />
+              <span className="break-all whitespace-pre-wrap">{github}</span>
             </div>
           )}
           {(city || country) && (
             <div className="flex items-center gap-1">
-              <MapPin className="w-4 h-4" style={{primaryColor}}/>
+              <MapPin className="w-4 h-4 text-resume-primary" />
               <span>
                 {city}, {country}
               </span>
@@ -165,7 +175,7 @@ function SummarySection({ resumeData }: ResumeSectionProps) {
   );
 }
 
-function ExperienceSection({ resumeData,primaryColor }: ResumeSectionProps) {
+function ExperienceSection({ resumeData }: ResumeSectionProps) {
     const { workExperiences } = resumeData;
   return (
     <section>
@@ -187,7 +197,7 @@ function ExperienceSection({ resumeData,primaryColor }: ResumeSectionProps) {
               </div>
               <div>
                 <h3 className="font-bold">{exp.company}</h3>
-                <p className="text-sm" style={{ color:primaryColor }}>
+                <p className="text-sm text-resume-primary">
                   {exp.position}
                 </p>
                 <div>
@@ -217,7 +227,7 @@ function ExperienceSection({ resumeData,primaryColor }: ResumeSectionProps) {
   );
 }
 
-function EducationSection({ resumeData,primaryColor }: ResumeSectionProps) {
+function EducationSection({ resumeData }: ResumeSectionProps) {
     const { educations } = resumeData;
   return (
     <section>
@@ -239,7 +249,7 @@ function EducationSection({ resumeData,primaryColor }: ResumeSectionProps) {
               </div>
               <div>
                 <h3 className="font-bold">{edu.degree}</h3>
-                <p className="text-sm " style={{ color:primaryColor }}>
+                <p className="text-sm text-resume-primary">
                   {edu.school}
                 </p>
                 <div>

@@ -4,6 +4,7 @@ import useDimensions from "@resume/ui/hooks/use-dimensions";
 import cn from "@resume/ui/cn";
 import type { ResumeValues } from "utils/validations";
 import { Award, Briefcase, GraduationCap, PuzzleIcon } from "lucide-react";
+import { useResumeColors } from "@resume/ui/hooks/useResumeColors";
 
 interface ResumePreviewProps {
   resumeData: ResumeValues;
@@ -21,7 +22,7 @@ export default function Template6({
 }: ResumePreviewProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const { width } = useDimensions(containerRef);
-
+  useResumeColors(primaryColor);
   return (
     <div
       ref={containerRef}
@@ -38,23 +39,23 @@ export default function Template6({
         ref={contentRef}
         id="resumePreviewContent"
       >
-        {resumeData.firstName && <HeaderSection resumeData={resumeData} primaryColor={primaryColor}/>}
+        {resumeData.firstName && <HeaderSection resumeData={resumeData} />}
         <div className="p-8 space-y-6">
           {resumeData.summary && <SummarySection resumeData={resumeData} />}
           {(resumeData.workExperiences?.length ?? 0) > 0 && (
-            <ExperienceSection resumeData={resumeData} primaryColor={primaryColor}/>
+            <ExperienceSection resumeData={resumeData} />
           )}
           {(resumeData.educations?.length ?? 0) > 0 && (
-            <EducationSection resumeData={resumeData} primaryColor={primaryColor}/>
+            <EducationSection resumeData={resumeData} />
           )}
           {(resumeData.skills?.length ?? 0) > 0 && (
-            <SkillsSection resumeData={resumeData} primaryColor={primaryColor}/>
+            <SkillsSection resumeData={resumeData} />
           )}
           {(resumeData.softwares?.length ?? 0) > 0 && (
             <SoftwareSection resumeData={resumeData} />
           )}
           {(resumeData.certifications?.length ?? 0) > 0 && (
-            <CertificationsSection resumeData={resumeData} primaryColor={primaryColor}/>
+            <CertificationsSection resumeData={resumeData} />
           )}
         </div>
       </div>
@@ -64,11 +65,10 @@ export default function Template6({
 
 interface ResumeSectionProps {
   resumeData: ResumeValues;
-  primaryColor?:string
 }
-const DiamondIcon = ({ Icon,primaryColor }: { Icon: React.ElementType,primaryColor?:string }) => (
+const DiamondIcon = ({ Icon }: { Icon: React.ElementType}) => (
   <div className="relative ml-[0.7%]">
-    <div className="w-8 h-8 rotate-45 flex items-center justify-center" style={{backgroundColor:primaryColor}}>
+    <div className="w-8 h-8 rotate-45 flex items-center justify-center bg-resume-primary">
       <Icon className="w-5 h-5 text-white rotate-[-45deg]" />
     </div>
   </div>
@@ -90,11 +90,11 @@ function RatingDots({ rating }: { rating: number }) {
   );
 }
 
-function HeaderSection({ resumeData,primaryColor }: ResumeSectionProps) {
+function HeaderSection({ resumeData }: ResumeSectionProps) {
   const { firstName, lastName, jobTitle, phone, email,linkedin } = resumeData;
 
   return (
-    <div className=" text-white p-8" style={{ backgroundColor: primaryColor }}>
+    <div className=" text-white p-8 bg-resume-primary">
       <div className="space-y-2">
         {(firstName || lastName) && (
           <h1 className="text-3xl font-bold">
@@ -119,7 +119,7 @@ function HeaderSection({ resumeData,primaryColor }: ResumeSectionProps) {
             <div>
               <p>
                 <span className="font-semibold">LinkedIn:</span>{" "}
-                linkedin.com/johnuw
+                {linkedin}
               </p>
             </div>
           )}
@@ -141,25 +141,21 @@ function SummarySection({ resumeData }: ResumeSectionProps) {
   );
 }
 
-const ExperienceSection = ({ resumeData, primaryColor }: ResumeSectionProps) => {
+const ExperienceSection = ({ resumeData }: ResumeSectionProps) => {
   return (
     <section className="relative">
       <div
-        className="absolute left-5 top-12 bottom-0 w-[1px]"
-        style={{ backgroundColor: `${primaryColor}25` }}
+        className="absolute left-5 top-12 bottom-0 w-[1px] bg-resume-primary"
       />
       <div className="flex items-center gap-3 mb-4">
-        <DiamondIcon Icon={Briefcase} primaryColor={primaryColor} />
-        <h2 className="text-xl font-bold" style={{ color:primaryColor }}>
-          EXPERIENCE
-        </h2>
+        <DiamondIcon Icon={Briefcase} />
+        <h2 className="text-xl font-bold text-resume-primary">EXPERIENCE</h2>
       </div>
       <div className="space-y-6 ml-4">
         {resumeData.workExperiences?.map((exp, index) => (
           <div key={index} className="flex relative pl-6">
             <div
-              className="absolute left-0 top-2 w-2 h-2 rotate-45"
-              style={{ backgroundColor: primaryColor }}
+              className="absolute left-0 top-2 w-2 h-2 rotate-45 bg-resume-primary"
             />
             <div className="w-24 flex-shrink-0 text-sm font-bold text-gray-600">
               {exp.startDate && formatDate(exp.startDate, "MMM yyyy")} -{" "}
@@ -169,8 +165,7 @@ const ExperienceSection = ({ resumeData, primaryColor }: ResumeSectionProps) => 
               <div className="font-bold text-gray-600">{exp.position}</div>
               <div className="mb-2 text-gray-600">{exp.company}</div>
               <ul
-                className="list-disc ml-5 space-y-2"
-                style={{ primaryColor: `${primaryColor}CC` }}
+                className="list-disc ml-5 space-y-2 "
               >
                 {exp.description
                   ?.split("\n")
@@ -184,25 +179,21 @@ const ExperienceSection = ({ resumeData, primaryColor }: ResumeSectionProps) => 
   );
 };
 
-function EducationSection({ resumeData, primaryColor }: ResumeSectionProps) {
+function EducationSection({ resumeData }: ResumeSectionProps) {
   return (
     <section className="relative">
       <div
-        className="absolute left-5 top-12 bottom-0 w-[1px]"
-        style={{ backgroundColor: `${primaryColor}25` }}
+        className="absolute left-5 top-12 bottom-0 w-[1px] bg-resume-primary"
       />
       <div className="flex items-center gap-3 mb-4">
-        <DiamondIcon Icon={GraduationCap} primaryColor={primaryColor} />
-        <h2 className="text-xl font-bold" style={{ color:primaryColor }}>
-          EDUCATION
-        </h2>
+        <DiamondIcon Icon={GraduationCap} />
+        <h2 className="text-xl font-bold text-resume-primary">EDUCATION</h2>
       </div>
       <div className="space-y-6 ml-4">
         {resumeData.educations?.map((edu, index) => (
           <div key={index} className="flex relative pl-6">
             <div
-              className="absolute left-0 top-2 w-2 h-2 rotate-45"
-              style={{ backgroundColor: primaryColor }}
+              className="absolute left-0 top-2 w-2 h-2 rotate-45 bg-resume-primary"
             />
             <div className="w-24 flex-shrink-0 text-gray-600 text-sm font-bold">
               {edu.startDate && formatDate(edu.startDate, "MMM yyyy")} -{" "}
@@ -225,18 +216,17 @@ function EducationSection({ resumeData, primaryColor }: ResumeSectionProps) {
   );
 }
 
-function CertificationsSection({ resumeData, primaryColor }: ResumeSectionProps) {
+function CertificationsSection({ resumeData }: ResumeSectionProps) {
   const { certifications } = resumeData;
 
   return (
     <section className="relative">
       <div
-        className="absolute left-5 top-12 bottom-0 w-[1px]"
-        style={{ backgroundColor: `${primaryColor}25` }}
+        className="absolute left-5 top-12 bottom-0 w-[1px] bg-resume-primary"
       />
       <div className="flex items-center gap-3 mb-4">
-        <DiamondIcon Icon={Award} primaryColor={primaryColor} />
-        <h2 className="text-xl font-bold" style={{ color:primaryColor }}>
+        <DiamondIcon Icon={Award} />
+        <h2 className="text-xl font-bold text-resume-primary">
           CERTIFICATIONS
         </h2>
       </div>
@@ -244,8 +234,7 @@ function CertificationsSection({ resumeData, primaryColor }: ResumeSectionProps)
         {certifications?.map((cert, index) => (
           <div key={index} className="relative pl-6">
             <div
-              className="absolute left-0 top-2 w-2 h-2 rotate-45"
-              style={{ backgroundColor: primaryColor }}
+              className="absolute left-0 top-2 w-2 h-2 rotate-45 bg-resume-primary"
             />
             <div className="flex justify-between">
               <p className="text-sm font-bold">{cert.name}</p>
@@ -260,27 +249,24 @@ function CertificationsSection({ resumeData, primaryColor }: ResumeSectionProps)
 
 
 
-function SkillsSection({ resumeData, primaryColor }: ResumeSectionProps) {
+function SkillsSection({ resumeData }: ResumeSectionProps) {
   const { skills } = resumeData;
 
   return (
     <section className="relative">
       <div
-        className="absolute left-5 top-12 bottom-0 w-[1px]"
-        style={{ backgroundColor: `${primaryColor}25` }}
+        className="absolute left-5 top-12 bottom-0 w-[1px] bg-resume-primary"
+        // style={{ backgroundColor: `${primaryColor}25` }}
       />
       <div className="flex items-center gap-3 mb-4">
-        <DiamondIcon Icon={PuzzleIcon} primaryColor={primaryColor} />
-        <h2 className="text-xl font-bold" style={{ color:primaryColor }}>
-          Skills
-        </h2>
+        <DiamondIcon Icon={PuzzleIcon} />
+        <h2 className="text-xl font-bold text-resume-primary">Skills</h2>
       </div>
       <div className="space-y-3 ml-4">
         {skills?.map((item, index) => (
           <div key={index} className="relative pl-6">
             <div
-              className="absolute left-0 top-2 w-2 h-2 rotate-45"
-              style={{ backgroundColor: primaryColor }}
+              className="absolute left-0 top-2 w-2 h-2 rotate-45 bg-resume-primary"
             />
             <p className="text-sm font-bold">{item}</p>
           </div>
