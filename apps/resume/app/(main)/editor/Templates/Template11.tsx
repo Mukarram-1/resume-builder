@@ -48,11 +48,12 @@ export default function Template11({
         className={cn("", !width && "invisible")}
         style={{
           zoom: (1 / 794) * width,
+          fontFamily: resumeData.fontStyle,
         }}
         ref={contentRef}
         id="resumePreviewContent"
       >
-        {resumeData.firstName && <HeaderSection resumeData={resumeData}/>}
+        {resumeData.firstName && <HeaderSection resumeData={resumeData} />}
         {resumeData.email && <ContactSection resumeData={resumeData} />}
         <div className="grid grid-cols-[1.6fr_1fr] gap-8 p-8">
           <div className="space-y-8">

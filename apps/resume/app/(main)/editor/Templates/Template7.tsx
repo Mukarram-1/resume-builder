@@ -47,18 +47,19 @@ export default function Template7({
         className={cn("grid grid-cols-[2fr_1fr]", !width && "invisible")}
         style={{
           zoom: (1 / 794) * width,
+          fontFamily: resumeData.fontStyle,
         }}
         ref={contentRef}
         id="resumePreviewContent"
       >
         <div className="p-8 space-y-6">
-          {resumeData.firstName && <HeaderSection resumeData={resumeData}/>}
+          {resumeData.firstName && <HeaderSection resumeData={resumeData} />}
           {resumeData.summary && <SummarySection resumeData={resumeData} />}
           {(resumeData.workExperiences?.length ?? 0) > 0 && (
-            <ExperienceSection resumeData={resumeData}/>
+            <ExperienceSection resumeData={resumeData} />
           )}
           {(resumeData.educations?.length ?? 0) > 0 && (
-            <EducationSection resumeData={resumeData}/>
+            <EducationSection resumeData={resumeData} />
           )}
           {(resumeData.languages?.length ?? 0) > 0 && (
             <>

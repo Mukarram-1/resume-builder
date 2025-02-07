@@ -36,6 +36,7 @@ export default function Template1({
   className,
   primaryColor = "#DAA520",
 }: ResumePreviewProps) {
+  // console.log("Font style", resumeData.fontStyle);
   const containerRef = useRef<HTMLDivElement>(null);
   const { width } = useDimensions(containerRef);
   useResumeColors(primaryColor);
@@ -48,7 +49,6 @@ export default function Template1({
     secondaryFontSizeClasses[
       (resumeData.secondaryFontSize as keyof typeof fontSizeClasses) || "medium"
     ];
-
   return (
     <div
       ref={containerRef}
@@ -61,6 +61,7 @@ export default function Template1({
         className={cn("p-8", !width && "invisible")}
         style={{
           zoom: (1 / 794) * width,
+          fontFamily: resumeData.fontStyle,
         }}
         ref={contentRef}
         id="resumePreviewContent"

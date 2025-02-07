@@ -71,6 +71,7 @@ export default function Template3({
         )}
         style={{
           zoom: (1 / 794) * width,
+          fontFamily: resumeData.fontStyle,
         }}
         ref={contentRef}
         id="resumePreviewContent"
@@ -83,19 +84,17 @@ export default function Template3({
               <PersonalInfoHeader resumeData={resumeData} />
             )}
             {(resumeData.linkedin || resumeData.github) && (
-              <ProfilesSection resumeData={resumeData}  />
+              <ProfilesSection resumeData={resumeData} />
             )}
-            {resumeData.summary && (
-              <SummarySection resumeData={resumeData}  />
-            )}
+            {resumeData.summary && <SummarySection resumeData={resumeData} />}
             {(resumeData.workExperiences?.length ?? 0) > 0 && (
-              <ExperienceSection resumeData={resumeData}  />
+              <ExperienceSection resumeData={resumeData} />
             )}
             {(resumeData.educations?.length ?? 0) > 0 && (
-              <EducationSection resumeData={resumeData}  />
+              <EducationSection resumeData={resumeData} />
             )}
             {(resumeData.projects?.length ?? 0) > 0 && (
-              <ProjectsSection resumeData={resumeData}  />
+              <ProjectsSection resumeData={resumeData} />
             )}
           </div>
         )}
@@ -106,14 +105,23 @@ export default function Template3({
           >
             <div className={cn(!hasMainContent && "mt-0", "mt-[65%]")}>
               {(resumeData.skills?.length ?? 0) > 0 && (
-                <SkillsSection resumeData={resumeData} primaryColor={primaryColor} />
+                <SkillsSection
+                  resumeData={resumeData}
+                  primaryColor={primaryColor}
+                />
               )}
               {(resumeData.certifications?.length ?? 0) > 0 && (
-                <CertificationsSection resumeData={resumeData} primaryColor={primaryColor} />
+                <CertificationsSection
+                  resumeData={resumeData}
+                  primaryColor={primaryColor}
+                />
               )}
               {(resumeData.languages?.length ?? 0) > 0 && (
                 <>
-                  <LanguagesSection resumeData={resumeData} primaryColor={primaryColor} />
+                  <LanguagesSection
+                    resumeData={resumeData}
+                    primaryColor={primaryColor}
+                  />
                   <hr className="border-t border-gray-300 my-4" />
                 </>
               )}

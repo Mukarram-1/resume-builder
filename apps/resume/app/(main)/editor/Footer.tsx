@@ -7,6 +7,7 @@ import ColorPicker from "./ColorPicker";
 import BorderStyleButton from "./BorderStyleButton";
 import FontSizeSelector from "./FontSizeSelector";
 import type { ResumeValues } from "utils/validations";
+import FontStyleSelector from "./FontStyleSelector";
 
 interface FooterProps {
   currentStep: string;
@@ -105,6 +106,12 @@ export default function Footer({
             fontSize={resumeData.secondaryFontSize || "small"}
             onFontSizeChange={(fontSize) =>
               setResumeData({ ...resumeData, secondaryFontSize: fontSize })
+            }
+          />
+          <FontStyleSelector
+            fontStyle={resumeData.fontStyle || "Arial"}
+            onFontStyleChange={(fontStyle) =>
+              setResumeData({ ...resumeData, fontStyle })
             }
           />
           <Button variant="secondary" asChild>

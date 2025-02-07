@@ -97,7 +97,7 @@ export default function Template5({
     >
       <div
         className="p-8"
-        style={{ zoom }}
+        style={{ zoom, fontFamily: resumeData.fontStyle }}
         ref={contentRef}
         id="resumePreviewContent"
       >
@@ -110,25 +110,25 @@ export default function Template5({
               <PersonalInfoSection resumeData={resumeData} />
             )}
             {visibleSections.skills && (
-              <SkillsSection resumeData={resumeData}/>
+              <SkillsSection resumeData={resumeData} />
             )}
             {visibleSections.software && <SoftwareSection />}
             {(resumeData.languages?.length ?? 0) > 0 && (
               <>
-                <LanguagesSection resumeData={resumeData}/>
+                <LanguagesSection resumeData={resumeData} />
                 <hr className="border-t border-gray-300 my-4" />
               </>
             )}
           </div>
           <div className="space-y-6">
             {visibleSections.experience && (
-              <ExperienceSection resumeData={resumeData}/>
+              <ExperienceSection resumeData={resumeData} />
             )}
             {visibleSections.education && (
-              <EducationSection resumeData={resumeData}/>
+              <EducationSection resumeData={resumeData} />
             )}
             {(resumeData.certifications?.length ?? 0) > 0 && (
-              <CertificationsSection resumeData={resumeData}/>
+              <CertificationsSection resumeData={resumeData} />
             )}
             {visibleSections.interests && <InterestsSection />}
           </div>

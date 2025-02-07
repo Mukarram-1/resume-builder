@@ -35,21 +35,22 @@ export default function Template8({
         className={cn("p-8", !width && "invisible")}
         style={{
           zoom: (1 / 794) * width,
+          fontFamily: resumeData.fontStyle,
         }}
         ref={contentRef}
         id="resumePreviewContent"
       >
-        <HeaderSection resumeData={resumeData}/>
+        <HeaderSection resumeData={resumeData} />
         <div className="grid grid-cols-[2fr_1fr] gap-8 mt-6">
           <div className="space-y-6">
             {(resumeData.workExperiences?.length ?? 0) > 0 && (
-              <ExperienceSection resumeData={resumeData}/>
+              <ExperienceSection resumeData={resumeData} />
             )}
             {(resumeData.educations?.length ?? 0) > 0 && (
-              <EducationSection resumeData={resumeData}/>
+              <EducationSection resumeData={resumeData} />
             )}
             {(resumeData.certifications?.length ?? 0) > 0 && (
-              <CertificationsSection resumeData={resumeData}/>
+              <CertificationsSection resumeData={resumeData} />
             )}
             {resumeData.interests && (
               <InterestsSection resumeData={resumeData} />
@@ -60,10 +61,10 @@ export default function Template8({
               resumeData.country ||
               resumeData.phone ||
               resumeData.email) && (
-              <PersonalInfoSection resumeData={resumeData}/>
+              <PersonalInfoSection resumeData={resumeData} />
             )}
             {(resumeData.skills?.length ?? 0) > 0 && (
-              <SkillsSection resumeData={resumeData}/>
+              <SkillsSection resumeData={resumeData} />
             )}
             {resumeData.softwares && (
               <SoftwareSection resumeData={resumeData} />

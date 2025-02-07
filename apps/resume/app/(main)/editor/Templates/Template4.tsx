@@ -40,23 +40,22 @@ export default function Template4({
         )}
         style={{
           zoom: (1 / 794) * width,
+          fontFamily: resumeData.fontStyle,
         }}
         ref={contentRef}
         id="resumePreviewContent"
       >
         <div className="space-y-6">
-          {resumeData.email && (
-            <PersonalInfoSection resumeData={resumeData} />
-          )}
+          {resumeData.email && <PersonalInfoSection resumeData={resumeData} />}
           {(resumeData.skills?.length ?? 0) > 0 && (
-            <SkillsSection resumeData={resumeData}/>
+            <SkillsSection resumeData={resumeData} />
           )}
           {/* {(resumeData.softwares?.length ?? 0) > 0 && (
             <SoftwareSection resumeData={resumeData} />
           )} */}
           {(resumeData.languages?.length ?? 0) > 0 && (
             <>
-              <LanguagesSection resumeData={resumeData}/>
+              <LanguagesSection resumeData={resumeData} />
               <hr className="border-t border-gray-300 my-4" />
             </>
           )}
@@ -64,13 +63,13 @@ export default function Template4({
         <div className="space-y-6">
           <SummarySection resumeData={resumeData} />
           {(resumeData.workExperiences?.length ?? 0) > 0 && (
-            <ExperienceSection resumeData={resumeData}/>
+            <ExperienceSection resumeData={resumeData} />
           )}
           {(resumeData.educations?.length ?? 0) > 0 && (
-            <EducationSection resumeData={resumeData}/>
+            <EducationSection resumeData={resumeData} />
           )}
           {(resumeData.certifications?.length ?? 0) > 0 && (
-            <CertificatesSection resumeData={resumeData}/>
+            <CertificatesSection resumeData={resumeData} />
           )}
           {/* {(resumeData.interests?.length ?? 0) > 0 && (
             <InterestsSection resumeData={resumeData} />

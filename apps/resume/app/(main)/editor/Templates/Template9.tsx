@@ -48,6 +48,7 @@ export default function Template9({
         className={cn("grid grid-cols-[280px_1fr]", !width && "invisible")}
         style={{
           zoom: (1 / 794) * width,
+          fontFamily: resumeData.fontStyle,
         }}
         ref={contentRef}
         id="resumePreviewContent"
@@ -60,15 +61,9 @@ export default function Template9({
             } as React.CSSProperties
           }
         >
-          <div
-            className="absolute top-0 right-0 w-2 h-full bg-resume-secondary"
-          ></div>
+          <div className="absolute top-0 right-0 w-2 h-full bg-resume-secondary"></div>
           <div className="space-y-8">
-            {resumeData.phone && (
-              <ProfileSection
-                resumeData={resumeData}
-              />
-            )}
+            {resumeData.phone && <ProfileSection resumeData={resumeData} />}
             {(resumeData.skills?.length ?? 0) > 0 && (
               <SkillsSection
                 resumeData={resumeData}

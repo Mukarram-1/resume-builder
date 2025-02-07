@@ -58,6 +58,7 @@ export default function Template2({
         className={cn("p-8", !width && "invisible")}
         style={{
           zoom: (1 / 794) * width,
+          fontFamily: resumeData.fontStyle,
         }}
         ref={contentRef}
         id="resumePreviewContent"
