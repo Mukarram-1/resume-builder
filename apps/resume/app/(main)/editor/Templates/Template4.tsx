@@ -14,6 +14,8 @@ interface ResumePreviewProps {
   className?: string;
   primaryColor?: string;
   secondaryColor?: string;
+  primaryFontSizeClass?: string;
+  secondaryFontSizeClass?: string;
 }
 
 export default function Template4({
@@ -25,6 +27,32 @@ export default function Template4({
   const containerRef = useRef<HTMLDivElement>(null);
   const { width } = useDimensions(containerRef);
   useResumeColors(primaryColor);
+  const getFontSizeClass = (size: number) => {
+    const sizeMap: Record<number, string> = {
+      12: "text-xs",
+      14: "text-sm",
+      16: "text-base",
+      18: "text-lg",
+      20: "text-xl",
+      24: "text-2xl",
+      30: "text-3xl",
+      36: "text-4xl",
+    };
+    const sizes = Object.keys(sizeMap).map(Number);
+    const closestSize = sizes.reduce((prev, curr) => {
+      return Math.abs(curr - size) < Math.abs(prev - size) ? curr : prev;
+    });
+
+    return sizeMap[closestSize] || "text-base";
+  };
+
+  const primaryFontSize = getFontSizeClass(
+    Number(resumeData.primaryFontSize) || 20
+  );
+  const secondaryFontSize = getFontSizeClass(
+    Number(resumeData.secondaryFontSize) || 16
+  );
+
   return (
     <div
       ref={containerRef}
@@ -46,34 +74,58 @@ export default function Template4({
         id="resumePreviewContent"
       >
         <div className="space-y-6">
-          {resumeData.email && <PersonalInfoSection resumeData={resumeData} />}
-          {(resumeData.skills?.length ?? 0) > 0 && (
-            <SkillsSection resumeData={resumeData} />
+          {resumeData.email && (
+            <PersonalInfoSection
+              resumeData={resumeData}
+              primaryFontSizeClass={primaryFontSize}
+              secondaryFontSizeClass={secondaryFontSize}
+            />
           )}
-          {/* {(resumeData.softwares?.length ?? 0) > 0 && (
-            <SoftwareSection resumeData={resumeData} />
-          )} */}
+          {(resumeData.skills?.length ?? 0) > 0 && (
+            <SkillsSection
+              resumeData={resumeData}
+              primaryFontSizeClass={primaryFontSize}
+              secondaryFontSizeClass={secondaryFontSize}
+            />
+          )}
           {(resumeData.languages?.length ?? 0) > 0 && (
             <>
-              <LanguagesSection resumeData={resumeData} />
+              <LanguagesSection
+                resumeData={resumeData}
+                primaryFontSizeClass={primaryFontSize}
+                secondaryFontSizeClass={secondaryFontSize}
+              />
               <hr className="border-t border-gray-300 my-4" />
             </>
           )}
         </div>
         <div className="space-y-6">
-          <SummarySection resumeData={resumeData} />
+          <SummarySection
+            resumeData={resumeData}
+            primaryFontSizeClass={primaryFontSize}
+            secondaryFontSizeClass={secondaryFontSize}
+          />
           {(resumeData.workExperiences?.length ?? 0) > 0 && (
-            <ExperienceSection resumeData={resumeData} />
+            <ExperienceSection
+              resumeData={resumeData}
+              primaryFontSizeClass={primaryFontSize}
+              secondaryFontSizeClass={secondaryFontSize}
+            />
           )}
           {(resumeData.educations?.length ?? 0) > 0 && (
-            <EducationSection resumeData={resumeData} />
+            <EducationSection
+              resumeData={resumeData}
+              primaryFontSizeClass={primaryFontSize}
+              secondaryFontSizeClass={secondaryFontSize}
+            />
           )}
           {(resumeData.certifications?.length ?? 0) > 0 && (
-            <CertificatesSection resumeData={resumeData} />
+            <CertificatesSection
+              resumeData={resumeData}
+              primaryFontSizeClass={primaryFontSize}
+              secondaryFontSizeClass={secondaryFontSize}
+            />
           )}
-          {/* {(resumeData.interests?.length ?? 0) > 0 && (
-            <InterestsSection resumeData={resumeData} />
-          )} */}
         </div>
       </div>
     </div>
@@ -82,6 +134,8 @@ export default function Template4({
 
 interface ResumeSectionProps {
   resumeData: ResumeValues;
+  primaryFontSizeClass?: string;
+  secondaryFontSizeClass?: string;
 }
 
 function RatingDots({ rating }: { rating: number }) {
@@ -100,18 +154,22 @@ function RatingDots({ rating }: { rating: number }) {
   );
 }
 
-function PersonalInfoSection({ resumeData }: ResumeSectionProps) {
+function PersonalInfoSection({
+  resumeData,
+  primaryFontSizeClass,
+  secondaryFontSizeClass,
+}: ResumeSectionProps) {
   return (
     <section>
-      <h2 className="font-bold text-lg mb-3 text-resume-primary">
+      <h2
+        className={`font-bold mb-3 text-resume-primary ${primaryFontSizeClass}`}
+      >
         • Personal Info
       </h2>
-      <div className="space-y-2 text-sm">
+      <div className={`space-y-2 ${secondaryFontSizeClass}`}>
         {(resumeData.city || resumeData.country) && (
           <div className="flex items-center gap-1">
-            <MapPin
-              className="w-5 h-5 border-1 rounded-full text-white text-center p-[3px] bg-resume-primary"
-            />
+            <MapPin className="w-5 h-5 border-1 rounded-full text-white text-center p-[3px] bg-resume-primary" />
             <p>
               {resumeData.city}, {resumeData.country}
             </p>
@@ -119,27 +177,25 @@ function PersonalInfoSection({ resumeData }: ResumeSectionProps) {
         )}
         {resumeData.phone && (
           <div className="flex items-center gap-1">
-            <Phone
-              className="w-5 h-5 border-1 rounded-full text-white text-center p-[3px] bg-resume-primary"
-            />
+            <Phone className="w-5 h-5 border-1 rounded-full text-white text-center p-[3px] bg-resume-primary" />
             <p>{resumeData.phone}</p>
           </div>
         )}
         {resumeData.email && (
           <div className="flex items-center gap-1">
-            <Mail className="w-5 h-5 border-1 rounded-full text-white text-center p-[3px] bg-resume-primary"/>
+            <Mail className="w-5 h-5 border-1 rounded-full text-white text-center p-[3px] bg-resume-primary" />
             <p>{resumeData.email}</p>
           </div>
         )}
         {resumeData.github && (
           <div className="flex items-center gap-1">
-            <Github className="w-5 h-5 border-1 rounded-full text-white text-center p-[3px] bg-resume-primary"/>
+            <Github className="w-5 h-5 border-1 rounded-full text-white text-center p-[3px] bg-resume-primary" />
             <p>{resumeData.github}</p>
           </div>
         )}
         {resumeData.linkedin && (
           <div className="flex items-center gap-1">
-            <Linkedin className="w-5 h-5 border-1 rounded-full text-white text-center p-[3px] bg-resume-primary"/>
+            <Linkedin className="w-5 h-5 border-1 rounded-full text-white text-center p-[3px] bg-resume-primary" />
             <p>{resumeData.linkedin}</p>
           </div>
         )}
@@ -147,26 +203,24 @@ function PersonalInfoSection({ resumeData }: ResumeSectionProps) {
     </section>
   );
 }
-function SummarySection({ resumeData }: ResumeSectionProps) {
-     const {
-       firstName,
-       lastName,
-       jobTitle,
-       photo,
-       borderStyle,
-     } = resumeData;
-    const [photoSrc, setPhotoSrc] = useState(
-      photo instanceof File ? "" : photo
-    );
 
-    useEffect(() => {
-      const objectUrl = photo instanceof File ? URL.createObjectURL(photo) : "";
-      if (objectUrl) {
-        setPhotoSrc(objectUrl);
-      }
-      if (photo === null) setPhotoSrc(objectUrl);
-      return () => URL.revokeObjectURL(objectUrl);
-    }, [photo]);
+function SummarySection({
+  resumeData,
+  primaryFontSizeClass,
+  secondaryFontSizeClass,
+}: ResumeSectionProps) {
+  const { firstName, lastName, jobTitle, photo, borderStyle } = resumeData;
+  const [photoSrc, setPhotoSrc] = useState(photo instanceof File ? "" : photo);
+
+  useEffect(() => {
+    const objectUrl = photo instanceof File ? URL.createObjectURL(photo) : "";
+    if (objectUrl) {
+      setPhotoSrc(objectUrl);
+    }
+    if (photo === null) setPhotoSrc(objectUrl);
+    return () => URL.revokeObjectURL(objectUrl);
+  }, [photo]);
+
   return (
     <section className="relative">
       {photoSrc && (
@@ -189,12 +243,14 @@ function SummarySection({ resumeData }: ResumeSectionProps) {
             />
             <div className="flex flex-col justify-center items-center">
               {(firstName || lastName) && (
-                <h1 className="text-3xl font-bold mb-1">
+                <h1 className={`font-bold mb-1 ${primaryFontSizeClass}`}>
                   {firstName} {lastName}
                 </h1>
               )}
               {jobTitle && (
-                <p className="text-xl text-gray-800 mb-4">{jobTitle}</p>
+                <p className={`text-gray-800 mb-4 ${primaryFontSizeClass}`}>
+                  {jobTitle}
+                </p>
               )}
             </div>
           </div>
@@ -202,11 +258,8 @@ function SummarySection({ resumeData }: ResumeSectionProps) {
       )}
       {resumeData.summary && (
         <div className="max-w-full overflow-hidden">
-          {/* <p className="text-sm text-gray-800 break-all whitespace-pre-wrap">
-            {resumeData.summary}
-          </p> */}
           <div
-            className="text-sm text-gray-800 summary-content [&_p]:mb-2 [&_ul]:list-disc [&_ul]:ml-4 [&_ol]:list-decimal [&_ol]:ml-4 [&_li]:mb-1 [&_strong]:font-semibold [&_em]:italic break-all whitespace-pre-wrap"
+            className={`text-gray-800 summary-content [&_p]:mb-2 [&_ul]:list-disc [&_ul]:ml-4 [&_ol]:list-decimal [&_ol]:ml-4 [&_li]:mb-1 [&_strong]:font-semibold [&_em]:italic break-all whitespace-pre-wrap ${secondaryFontSizeClass}`}
             dangerouslySetInnerHTML={{ __html: resumeData.summary || "" }}
           />
         </div>
@@ -214,18 +267,25 @@ function SummarySection({ resumeData }: ResumeSectionProps) {
     </section>
   );
 }
-function SkillsSection({ resumeData }: ResumeSectionProps) {
-  const {skills} = resumeData
+
+function SkillsSection({
+  resumeData,
+  primaryFontSizeClass,
+  secondaryFontSizeClass,
+}: ResumeSectionProps) {
+  const { skills } = resumeData;
 
   return (
     <section>
-      <h2 className="font-bold text-lg mb-3 text-resume-primary" >
+      <h2
+        className={`font-bold mb-3 text-resume-primary ${primaryFontSizeClass}`}
+      >
         • Skills
       </h2>
       <ul className="list-none space-y-2">
         {skills &&
           skills.map((skill, index) => (
-            <li key={index} className="text-sm">
+            <li key={index} className={secondaryFontSizeClass}>
               {skill}
             </li>
           ))}
@@ -234,128 +294,124 @@ function SkillsSection({ resumeData }: ResumeSectionProps) {
   );
 }
 
-function SoftwareSection({ resumeData }: ResumeSectionProps) {
-  const software = [
-    { name: "Microsoft Project", rating: 5 },
-    { name: "Microsoft Office (Word, Excel)", rating: 4 },
-    { name: "Windows Server", rating: 4 },
-    { name: "Git", rating: 3 },
-  ];
-
+function ExperienceSection({
+  resumeData,
+  primaryFontSizeClass,
+  secondaryFontSizeClass,
+}: ResumeSectionProps) {
   return (
-    <section>
-      <h2 className="text-[#003366] font-bold text-lg mb-3">• Software</h2>
-      <div className="space-y-3">
-        {software.map((item, index) => (
-          <div key={index} className="space-y-1">
-            <p className="text-sm">{item.name}</p>
-            <RatingDots rating={item.rating} />
-            <p className="text-xs text-gray-600">
-              {item.rating === 5
-                ? "Excellent"
-                : item.rating === 4
-                  ? "Very Good"
-                  : item.rating === 3
-                    ? "Good"
-                    : item.rating === 2
-                      ? "Basic"
-                      : "Beginner"}
-            </p>
+    <div className="mt-4">
+      <div className="flex items-center mb-4">
+        <div
+          className={`font-bold text-resume-primary ${primaryFontSizeClass}`}
+        >
+          • Experience
+        </div>
+      </div>
+      <div className="space-y-6">
+        {resumeData.workExperiences?.map((exp, index) => (
+          <div key={index} className="flex">
+            <div
+              className={`w-24 flex-shrink-0 text-gray-600 font-bold ${secondaryFontSizeClass}`}
+            >
+              {exp.startDate && formatDate(exp.startDate, "yyyy-MM")} -{" "}
+              {exp.endDate ? formatDate(exp.endDate, "yyyy-MM") : "present"}
+            </div>
+            <div className="flex-1">
+              <div
+                className={`font-bold text-gray-800 ${primaryFontSizeClass}`}
+              >
+                {exp.position}
+              </div>
+              <div className={`text-gray-600 mb-2 ${secondaryFontSizeClass}`}>
+                {exp.company}
+              </div>
+              <ul
+                className={`list-disc ml-5 space-y-2 text-gray-700 break-all whitespace-pre-wrap ${secondaryFontSizeClass}`}
+              >
+                {exp.description
+                  ?.split("\n")
+                  .map((item, i) => <li key={i}>{item}</li>)}
+              </ul>
+            </div>
           </div>
         ))}
       </div>
-    </section>
+    </div>
   );
 }
 
-function ExperienceSection({ resumeData }: ResumeSectionProps) {
- return (
-   <div className="mt-4">
-     {/* Section Header */}
-     <div className="flex items-center mb-4">
-       <div className=" font-bold text-resume-primary">• Experience</div>
-     </div>
-
-     {/* Experience Items */}
-     <div className="space-y-6">
-       {resumeData.workExperiences?.map((exp, index) => (
-         <div key={index} className="flex">
-           <div className="w-24 flex-shrink-0 text-gray-600 text-sm font-bold">
-             {exp.startDate && formatDate(exp.startDate, "yyyy-MM")} -{" "}
-             {exp.endDate ? formatDate(exp.endDate, "yyyy-MM") : "present"}
-           </div>
-           <div className="flex-1">
-             <div className="font-bold text-gray-800">{exp.position}</div>
-             <div className="text-gray-600 mb-2">{exp.company}</div>
-             <ul className="list-disc ml-5 space-y-2 text-gray-700 break-all whitespace-pre-wrap">
-               {exp.description
-                 ?.split("\n")
-                 .map((item, i) => <li key={i}>{item}</li>)}
-             </ul>
-           </div>
-         </div>
-       ))}
-     </div>
-   </div>
- );
+function EducationSection({
+  resumeData,
+  primaryFontSizeClass,
+  secondaryFontSizeClass,
+}: ResumeSectionProps) {
+  return (
+    <div className="mt-4">
+      <div className="flex items-center mb-4">
+        <div
+          className={`font-bold text-resume-primary ${primaryFontSizeClass}`}
+        >
+          • Education
+        </div>
+      </div>
+      {resumeData.educations?.map((edu, index) => (
+        <div key={index} className="flex">
+          <div
+            className={`w-24 flex-shrink-0 text-gray-600 font-bold ${secondaryFontSizeClass}`}
+          >
+            {edu.startDate && formatDate(edu.startDate, "yyyy-MM")} -{" "}
+            {edu.endDate ? formatDate(edu.endDate, "yyyy-MM") : "present"}
+          </div>
+          <div className="flex-1">
+            <div className={`font-bold text-gray-800 ${primaryFontSizeClass}`}>
+              {edu.school}
+            </div>
+            <div className={`text-gray-600 mb-2 ${secondaryFontSizeClass}`}>
+              {edu.degree}
+            </div>
+            {/* <ul
+              className={`list-disc ml-5 space-y-2 text-gray-700 ${secondaryFontSizeClass}`}
+            >
+              {edu.description
+                ?.split("\n")
+                .map((item, i) => <li key={i}>{item}</li>)}
+            </ul> */}
+          </div>
+        </div>
+      ))}
+    </div>
+  );
 }
 
-function EducationSection({ resumeData }: ResumeSectionProps) {
-   return (
-     <div className="mt-4">
-       {/* Section Header */}
-       <div className="flex items-center mb-4">
-         <div
-           className=" font-bold text-resume-primary"
-         >
-           • Education
-         </div>
-       </div>
-
-       {/* Education Items */}
-       {resumeData.educations?.map((edu, index) => (
-         <div key={index} className="flex">
-           <div className="w-24 flex-shrink-0 text-gray-600 text-sm font-bold">
-             {edu.startDate && formatDate(edu.startDate, "yyyy-MM")} -{" "}
-             {edu.endDate ? formatDate(edu.endDate, "yyyy-MM") : "present"}
-           </div>
-           <div className="flex-1">
-             <div className="font-bold text-gray-800">{edu.school}</div>
-             <div className="text-gray-600 mb-2">{edu.degree}</div>
-             <ul className="list-disc ml-5 space-y-2 text-gray-700">
-               {edu.description
-                 ?.split("\n")
-                 .map((item, i) => <li key={i}>{item}</li>)}
-             </ul>
-           </div>
-         </div>
-       ))}
-     </div>
-   );
-}
-
-function CertificatesSection({ resumeData }: ResumeSectionProps) {
-  const {certifications} = resumeData
+function CertificatesSection({
+  resumeData,
+  primaryFontSizeClass,
+  secondaryFontSizeClass,
+}: ResumeSectionProps) {
+  const { certifications } = resumeData;
 
   return (
     <div className="mt-4">
       <div className="flex items-center mb-4">
         <div
-          className="font-bold text-resume-primary"
+          className={`font-bold text-resume-primary ${primaryFontSizeClass}`}
         >
           • Certificates
         </div>
       </div>
-
-      {/* Certificates Items */}
       <div className="space-y-2">
         {certifications &&
           certifications.map((cert, index) => (
             <div key={index} className="flex items-center justify-center">
-              <div className="w-24 flex-shrink-0 text-gray-600 text-sm">
+              <div
+                className={`w-24 flex-shrink-0 text-gray-600 ${secondaryFontSizeClass}`}
+              >
                 {cert.completionDate}
               </div>
-              <div className="flex-1 text-gray-700">{cert.name}</div>
+              <div className={`flex-1 text-gray-700 ${secondaryFontSizeClass}`}>
+                {cert.name}
+              </div>
             </div>
           ))}
       </div>
@@ -363,44 +419,30 @@ function CertificatesSection({ resumeData }: ResumeSectionProps) {
   );
 }
 
-function LanguagesSection({ resumeData }: ResumeSectionProps) {
-  const {languages} = resumeData;
+function LanguagesSection({
+  resumeData,
+  primaryFontSizeClass,
+  secondaryFontSizeClass,
+}: ResumeSectionProps) {
+  const { languages } = resumeData;
 
   return (
     <section>
-      <h2 className="font-bold text-lg mb-3 text-resume-primary">
+      <h2
+        className={`font-bold mb-3 text-resume-primary ${primaryFontSizeClass}`}
+      >
         • Languages
       </h2>
       <div className="space-y-3">
         {languages?.map((lang, index) => (
           <div key={index} className="space-y-1">
-            <p className="text-sm">{lang.name}</p>
-            {/* <RatingDots rating={lang.rating} /> */}
-            <p className="text-xs text-gray-600">{lang.proficiency}</p>
+            <p className={secondaryFontSizeClass}>{lang.name}</p>
+            <p className={`text-xs text-gray-600 ${secondaryFontSizeClass}`}>
+              {lang.proficiency}
+            </p>
           </div>
         ))}
       </div>
     </section>
-  );
-}
-
-function InterestsSection({ resumeData }: ResumeSectionProps) {
-  return (
-    <div className="mt-4">
-      {/* Section Header */}
-      <div className="flex items-center mb-4">
-        <div className="text-blue-900 font-bold">• Interests</div>
-      </div>
-
-      {/* Interests Items */}
-      <div className="flex">
-        <div className="flex-1">
-          <ul className="list-disc ml-5 space-y-2 text-gray-700">
-            <li>Member of the PTA</li>
-            <li>Avid cross country skier and cyclist</li>
-          </ul>
-        </div>
-      </div>
-    </div>
   );
 }

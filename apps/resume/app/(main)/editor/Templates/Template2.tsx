@@ -16,18 +16,6 @@ interface ResumePreviewProps {
   secondaryFontSizeClass?: string;
 }
 
-const fontSizeClasses = {
-  small: "text-sm",
-  medium: "text-xl",
-  large: "text-3xl",
-};
-
-const secondaryFontSizeClasses = {
-  small: "text-sm",
-  medium: "text-lg",
-  large: "text-xl",
-};
-
 export default function Template2({
   resumeData,
   contentRef,
@@ -37,14 +25,31 @@ export default function Template2({
 }: ResumePreviewProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const { width } = useDimensions(containerRef);
-  const primaryFontSizeClass =
-    fontSizeClasses[
-      (resumeData.primaryFontSize as keyof typeof fontSizeClasses) || "medium"
-    ];
-  const secondaryFontSizeClass =
-    secondaryFontSizeClasses[
-      (resumeData.secondaryFontSize as keyof typeof fontSizeClasses) || "medium"
-    ];
+  const getFontSizeClass = (size: number) => {
+    const sizeMap: Record<number, string> = {
+      12: "text-xs",
+      14: "text-sm",
+      16: "text-base",
+      18: "text-lg",
+      20: "text-xl",
+      24: "text-2xl",
+      30: "text-3xl",
+      36: "text-4xl",
+    };
+    const sizes = Object.keys(sizeMap).map(Number);
+    const closestSize = sizes.reduce((prev, curr) => {
+      return Math.abs(curr - size) < Math.abs(prev - size) ? curr : prev;
+    });
+
+    return sizeMap[closestSize] || "text-base";
+  };
+
+  const primaryFontSize = getFontSizeClass(
+    Number(resumeData.primaryFontSize) || 20
+  );
+  const secondaryFontSize = getFontSizeClass(
+    Number(resumeData.secondaryFontSize) || 16
+  );
 
   return (
     <div
@@ -69,8 +74,8 @@ export default function Template2({
           <>
             <PersonalInfoHeader
               resumeData={resumeData}
-              primaryFontSizeClass={primaryFontSizeClass}
-              secondaryFontSizeClass={secondaryFontSizeClass}
+              primaryFontSizeClass={primaryFontSize}
+              secondaryFontSizeClass={secondaryFontSize}
             />
             <hr className="border-t border-gray-300 my-4" />
           </>
@@ -80,8 +85,8 @@ export default function Template2({
           <>
             <ProfilesSection
               resumeData={resumeData}
-              primaryFontSizeClass={primaryFontSizeClass}
-              secondaryFontSizeClass={secondaryFontSizeClass}
+              primaryFontSizeClass={primaryFontSize}
+              secondaryFontSizeClass={secondaryFontSize}
             />
             <hr className="border-t border-gray-300 my-4" />
           </>
@@ -91,8 +96,8 @@ export default function Template2({
           <>
             <SummarySection
               resumeData={resumeData}
-              primaryFontSizeClass={primaryFontSizeClass}
-              secondaryFontSizeClass={secondaryFontSizeClass}
+              primaryFontSizeClass={primaryFontSize}
+              secondaryFontSizeClass={secondaryFontSize}
             />
             <hr className="border-t border-gray-300 my-4" />
           </>
@@ -102,8 +107,8 @@ export default function Template2({
           <>
             <WorkExperienceSection
               resumeData={resumeData}
-              primaryFontSizeClass={primaryFontSizeClass}
-              secondaryFontSizeClass={secondaryFontSizeClass}
+              primaryFontSizeClass={primaryFontSize}
+              secondaryFontSizeClass={secondaryFontSize}
             />
             <hr className="border-t border-gray-300 my-4" />
           </>
@@ -113,8 +118,8 @@ export default function Template2({
           <>
             <EducationSection
               resumeData={resumeData}
-              primaryFontSizeClass={primaryFontSizeClass}
-              secondaryFontSizeClass={secondaryFontSizeClass}
+              primaryFontSizeClass={primaryFontSize}
+              secondaryFontSizeClass={secondaryFontSize}
             />
             <hr className="border-t border-gray-300 my-4" />
           </>
@@ -124,8 +129,8 @@ export default function Template2({
           <>
             <ProjectsSection
               resumeData={resumeData}
-              primaryFontSizeClass={primaryFontSizeClass}
-              secondaryFontSizeClass={secondaryFontSizeClass}
+              primaryFontSizeClass={primaryFontSize}
+              secondaryFontSizeClass={secondaryFontSize}
             />
             <hr className="border-t border-gray-300 my-4" />
           </>
@@ -135,8 +140,8 @@ export default function Template2({
           <>
             <SkillsSection
               resumeData={resumeData}
-              primaryFontSizeClass={primaryFontSizeClass}
-              secondaryFontSizeClass={secondaryFontSizeClass}
+              primaryFontSizeClass={primaryFontSize}
+              secondaryFontSizeClass={secondaryFontSize}
             />
             <hr className="border-t border-gray-300 my-4" />
           </>
@@ -146,8 +151,8 @@ export default function Template2({
           <>
             <CertificationsSection
               resumeData={resumeData}
-              primaryFontSizeClass={primaryFontSizeClass}
-              secondaryFontSizeClass={secondaryFontSizeClass}
+              primaryFontSizeClass={primaryFontSize}
+              secondaryFontSizeClass={secondaryFontSize}
             />
             <hr className="border-t border-gray-300 my-4" />
           </>
@@ -157,8 +162,8 @@ export default function Template2({
           <>
             <LanguagesSection
               resumeData={resumeData}
-              primaryFontSizeClass={primaryFontSizeClass}
-              secondaryFontSizeClass={secondaryFontSizeClass}
+              primaryFontSizeClass={primaryFontSize}
+              secondaryFontSizeClass={secondaryFontSize}
             />
             <hr className="border-t border-gray-300 my-4" />
           </>
@@ -187,7 +192,6 @@ function PersonalInfoHeader({
     country,
     phone,
     email,
-    website,
   } = resumeData;
 
   return (
@@ -223,12 +227,6 @@ function PersonalInfoHeader({
           <div className="flex items-center gap-1">
             <Mail className="w-4 h-4" />
             <span>{email}</span>
-          </div>
-        )}
-        {website && (
-          <div className="flex items-center gap-1">
-            <Link2 className="w-4 h-4" />
-            <span>{website}</span>
           </div>
         )}
       </div>

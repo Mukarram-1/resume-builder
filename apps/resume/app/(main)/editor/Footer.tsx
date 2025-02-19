@@ -93,19 +93,25 @@ export default function Footer({
             }
           />
           <FontSizeSelector
+            label="Headings Font Size"
             //@ts-ignore
-            label="Primary Font Size"
-            fontSize={resumeData.primaryFontSize || "medium"}
+            fontSize={resumeData.primaryFontSize || 20}
             onFontSizeChange={(fontSize) =>
-              setResumeData({ ...resumeData, primaryFontSize: fontSize })
+              setResumeData({
+                ...resumeData,
+                primaryFontSize: fontSize.toString(),
+              })
             }
           />
           <FontSizeSelector
+            label="Text Font Size"
             //@ts-ignore
-            label="Secondary Font Size"
-            fontSize={resumeData.secondaryFontSize || "small"}
+            fontSize={resumeData.secondaryFontSize || 16}
             onFontSizeChange={(fontSize) =>
-              setResumeData({ ...resumeData, secondaryFontSize: fontSize })
+              setResumeData({
+                ...resumeData,
+                secondaryFontSize: fontSize.toString(),
+              })
             }
           />
           <FontStyleSelector

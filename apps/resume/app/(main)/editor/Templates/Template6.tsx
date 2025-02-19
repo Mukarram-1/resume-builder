@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import { formatDate } from "date-fns";
 import useDimensions from "@resume/ui/hooks/use-dimensions";
 import cn from "@resume/ui/cn";
@@ -10,8 +10,14 @@ interface ResumePreviewProps {
   resumeData: ResumeValues;
   contentRef?: React.Ref<HTMLDivElement>;
   className?: string;
-  primaryColor?:string
-  secondaryColor?:string
+  primaryColor?: string;
+  secondaryColor?: string;
+}
+
+interface ResumeSectionProps {
+  resumeData: ResumeValues;
+  primaryFontSizeClass?: string;
+  secondaryFontSizeClass?: string;
 }
 
 export default function Template6({
@@ -23,6 +29,33 @@ export default function Template6({
   const containerRef = useRef<HTMLDivElement>(null);
   const { width } = useDimensions(containerRef);
   useResumeColors(primaryColor);
+
+  // Helper to map numeric sizes to Tailwind font size classes.
+  const getFontSizeClass = (size: number) => {
+    const sizeMap: Record<number, string> = {
+      12: "text-xs",
+      14: "text-sm",
+      16: "text-base",
+      18: "text-lg",
+      20: "text-xl",
+      24: "text-2xl",
+      30: "text-3xl",
+      36: "text-4xl",
+    };
+    const sizes = Object.keys(sizeMap).map(Number);
+    const closestSize = sizes.reduce((prev, curr) =>
+      Math.abs(curr - size) < Math.abs(prev - size) ? curr : prev
+    );
+    return sizeMap[closestSize] || "text-base";
+  };
+
+  const primaryFontSizeClass = getFontSizeClass(
+    Number(resumeData.primaryFontSize) || 20
+  );
+  const secondaryFontSizeClass = getFontSizeClass(
+    Number(resumeData.secondaryFontSize) || 16
+  );
+
   return (
     <div
       ref={containerRef}
@@ -40,23 +73,55 @@ export default function Template6({
         ref={contentRef}
         id="resumePreviewContent"
       >
-        {resumeData.firstName && <HeaderSection resumeData={resumeData} />}
+        {resumeData.firstName && (
+          <HeaderSection
+            resumeData={resumeData}
+            primaryFontSizeClass={primaryFontSizeClass}
+            secondaryFontSizeClass={secondaryFontSizeClass}
+          />
+        )}
         <div className="p-8 space-y-6">
-          {resumeData.summary && <SummarySection resumeData={resumeData} />}
+          {resumeData.summary && (
+            <SummarySection
+              resumeData={resumeData}
+              primaryFontSizeClass={primaryFontSizeClass}
+              secondaryFontSizeClass={secondaryFontSizeClass}
+            />
+          )}
           {(resumeData.workExperiences?.length ?? 0) > 0 && (
-            <ExperienceSection resumeData={resumeData} />
+            <ExperienceSection
+              resumeData={resumeData}
+              primaryFontSizeClass={primaryFontSizeClass}
+              secondaryFontSizeClass={secondaryFontSizeClass}
+            />
           )}
           {(resumeData.educations?.length ?? 0) > 0 && (
-            <EducationSection resumeData={resumeData} />
+            <EducationSection
+              resumeData={resumeData}
+              primaryFontSizeClass={primaryFontSizeClass}
+              secondaryFontSizeClass={secondaryFontSizeClass}
+            />
           )}
           {(resumeData.skills?.length ?? 0) > 0 && (
-            <SkillsSection resumeData={resumeData} />
+            <SkillsSection
+              resumeData={resumeData}
+              primaryFontSizeClass={primaryFontSizeClass}
+              secondaryFontSizeClass={secondaryFontSizeClass}
+            />
           )}
-          {(resumeData.softwares?.length ?? 0) > 0 && (
-            <SoftwareSection resumeData={resumeData} />
-          )}
+          {/* {(resumeData.softwares?.length ?? 0) > 0 && (
+            <SoftwareSection
+              resumeData={resumeData}
+              primaryFontSizeClass={primaryFontSizeClass}
+              secondaryFontSizeClass={secondaryFontSizeClass}
+            />
+          )} */}
           {(resumeData.certifications?.length ?? 0) > 0 && (
-            <CertificationsSection resumeData={resumeData} />
+            <CertificationsSection
+              resumeData={resumeData}
+              primaryFontSizeClass={primaryFontSizeClass}
+              secondaryFontSizeClass={secondaryFontSizeClass}
+            />
           )}
         </div>
       </div>
@@ -64,10 +129,7 @@ export default function Template6({
   );
 }
 
-interface ResumeSectionProps {
-  resumeData: ResumeValues;
-}
-const DiamondIcon = ({ Icon }: { Icon: React.ElementType}) => (
+const DiamondIcon = ({ Icon }: { Icon: React.ElementType }) => (
   <div className="relative ml-[0.7%]">
     <div className="w-8 h-8 rotate-45 flex items-center justify-center bg-resume-primary">
       <Icon className="w-5 h-5 text-white rotate-[-45deg]" />
@@ -91,19 +153,24 @@ function RatingDots({ rating }: { rating: number }) {
   );
 }
 
-function HeaderSection({ resumeData }: ResumeSectionProps) {
-  const { firstName, lastName, jobTitle, phone, email,linkedin } = resumeData;
-
+function HeaderSection({
+  resumeData,
+  primaryFontSizeClass,
+  secondaryFontSizeClass,
+}: ResumeSectionProps) {
+  const { firstName, lastName, jobTitle, phone, email, linkedin } = resumeData;
   return (
-    <div className=" text-white p-8 bg-resume-primary">
+    <div className="text-white p-8 bg-resume-primary">
       <div className="space-y-2">
         {(firstName || lastName) && (
-          <h1 className="text-3xl font-bold">
+          <h1 className={`${primaryFontSizeClass} font-bold`}>
             {firstName} {lastName}
           </h1>
         )}
-        {jobTitle && <p className="text-xl">{jobTitle}</p>}
-        <div className="grid grid-cols-2 gap-4 mt-4 text-sm">
+        {jobTitle && <p className={`${secondaryFontSizeClass}`}>{jobTitle}</p>}
+        <div
+          className={`grid grid-cols-2 gap-4 mt-4 ${secondaryFontSizeClass}`}
+        >
           <div>
             {phone && (
               <p>
@@ -119,8 +186,7 @@ function HeaderSection({ resumeData }: ResumeSectionProps) {
           {linkedin && (
             <div>
               <p>
-                <span className="font-semibold">LinkedIn:</span>{" "}
-                {linkedin}
+                <span className="font-semibold">LinkedIn:</span> {linkedin}
               </p>
             </div>
           )}
@@ -130,43 +196,53 @@ function HeaderSection({ resumeData }: ResumeSectionProps) {
   );
 }
 
-function SummarySection({ resumeData }: ResumeSectionProps) {
+function SummarySection({
+  resumeData,
+  secondaryFontSizeClass,
+}: ResumeSectionProps) {
   return (
-    // <div className="text-sm text-gray-700 break-all whitespace-pre-wrap">
-    //   <p>{resumeData.summary}</p>
-    // </div>
     <div
-      className="text-sm text-gray-700 summary-content [&_p]:mb-2 [&_ul]:list-disc [&_ul]:ml-4 [&_ol]:list-decimal [&_ol]:ml-4 [&_li]:mb-1 [&_strong]:font-semibold [&_em]:italic break-all whitespace-pre-wrap"
+      className={`${secondaryFontSizeClass} text-gray-700 summary-content [&_p]:mb-2 [&_ul]:list-disc [&_ul]:ml-4 [&_ol]:list-decimal [&_ol]:ml-4 [&_li]:mb-1 [&_strong]:font-semibold [&_em]:italic break-all whitespace-pre-wrap`}
       dangerouslySetInnerHTML={{ __html: resumeData.summary || "" }}
     />
   );
 }
 
-const ExperienceSection = ({ resumeData }: ResumeSectionProps) => {
+const ExperienceSection = ({
+  resumeData,
+  primaryFontSizeClass,
+  secondaryFontSizeClass,
+}: ResumeSectionProps) => {
   return (
     <section className="relative">
-      <div
-        className="absolute left-5 top-12 bottom-0 w-[1px] bg-resume-primary"
-      />
+      <div className="absolute left-5 top-12 bottom-0 w-[1px] bg-resume-primary" />
       <div className="flex items-center gap-3 mb-4">
         <DiamondIcon Icon={Briefcase} />
-        <h2 className="text-xl font-bold text-resume-primary">EXPERIENCE</h2>
+        <h2 className={`${primaryFontSizeClass} font-bold text-resume-primary`}>
+          EXPERIENCE
+        </h2>
       </div>
-      <div className="space-y-6 ml-4">
+      <div className={`space-y-6 ml-4 ${secondaryFontSizeClass}`}>
         {resumeData.workExperiences?.map((exp, index) => (
           <div key={index} className="flex relative pl-6">
+            <div className="absolute left-0 top-2 w-2 h-2 rotate-45 bg-resume-primary" />
             <div
-              className="absolute left-0 top-2 w-2 h-2 rotate-45 bg-resume-primary"
-            />
-            <div className="w-24 flex-shrink-0 text-sm font-bold text-gray-600">
+              className={`w-24 flex-shrink-0 font-bold text-gray-600 ${secondaryFontSizeClass}`}
+            >
               {exp.startDate && formatDate(exp.startDate, "MMM yyyy")} -{" "}
               {exp.endDate ? formatDate(exp.endDate, "MMM yyyy") : "present"}
             </div>
             <div className="flex-1">
-              <div className="font-bold text-gray-600">{exp.position}</div>
-              <div className="mb-2 text-gray-600">{exp.company}</div>
+              <div
+                className={`font-bold text-gray-600 ${secondaryFontSizeClass}`}
+              >
+                {exp.position}
+              </div>
+              <div className={`mb-2 text-gray-600 ${secondaryFontSizeClass}`}>
+                {exp.company}
+              </div>
               <ul
-                className="list-disc ml-5 space-y-2 "
+                className={`list-disc ml-5 space-y-2 ${secondaryFontSizeClass}`}
               >
                 {exp.description
                   ?.split("\n")
@@ -180,35 +256,43 @@ const ExperienceSection = ({ resumeData }: ResumeSectionProps) => {
   );
 };
 
-function EducationSection({ resumeData }: ResumeSectionProps) {
+function EducationSection({
+  resumeData,
+  primaryFontSizeClass,
+  secondaryFontSizeClass,
+}: ResumeSectionProps) {
   return (
     <section className="relative">
-      <div
-        className="absolute left-5 top-12 bottom-0 w-[1px] bg-resume-primary"
-      />
+      <div className="absolute left-5 top-12 bottom-0 w-[1px] bg-resume-primary" />
       <div className="flex items-center gap-3 mb-4">
         <DiamondIcon Icon={GraduationCap} />
-        <h2 className="text-xl font-bold text-resume-primary">EDUCATION</h2>
+        <h2 className={`${primaryFontSizeClass} font-bold text-resume-primary`}>
+          EDUCATION
+        </h2>
       </div>
-      <div className="space-y-6 ml-4">
+      <div className={`space-y-6 ml-4 ${secondaryFontSizeClass}`}>
         {resumeData.educations?.map((edu, index) => (
           <div key={index} className="flex relative pl-6">
+            <div className="absolute left-0 top-2 w-2 h-2 rotate-45 bg-resume-primary" />
             <div
-              className="absolute left-0 top-2 w-2 h-2 rotate-45 bg-resume-primary"
-            />
-            <div className="w-24 flex-shrink-0 text-gray-600 text-sm font-bold">
+              className={`w-24 flex-shrink-0 font-bold text-gray-600 ${secondaryFontSizeClass}`}
+            >
               {edu.startDate && formatDate(edu.startDate, "MMM yyyy")} -{" "}
               {edu.endDate ? formatDate(edu.endDate, "MMM yyyy") : "present"}
             </div>
             <div className="flex-1">
-              <div className="font-bold text-gray-800">
+              <div
+                className={`font-bold text-gray-800 ${secondaryFontSizeClass}`}
+              >
                 {edu.degree}, {edu.school}
               </div>
-              <ul className="list-disc ml-5 space-y-2 text-gray-700">
+              {/* <ul
+                className={`list-disc ml-5 space-y-2 text-gray-700 ${secondaryFontSizeClass}`}
+              >
                 {edu.description
                   ?.split("\n")
                   .map((item, i) => <li key={i}>{item}</li>)}
-              </ul>
+              </ul> */}
             </div>
           </div>
         ))}
@@ -217,29 +301,32 @@ function EducationSection({ resumeData }: ResumeSectionProps) {
   );
 }
 
-function CertificationsSection({ resumeData }: ResumeSectionProps) {
+function CertificationsSection({
+  resumeData,
+  primaryFontSizeClass,
+  secondaryFontSizeClass,
+}: ResumeSectionProps) {
   const { certifications } = resumeData;
-
   return (
     <section className="relative">
-      <div
-        className="absolute left-5 top-12 bottom-0 w-[1px] bg-resume-primary"
-      />
+      <div className="absolute left-5 top-12 bottom-0 w-[1px] bg-resume-primary" />
       <div className="flex items-center gap-3 mb-4">
         <DiamondIcon Icon={Award} />
-        <h2 className="text-xl font-bold text-resume-primary">
+        <h2 className={`${primaryFontSizeClass} font-bold text-resume-primary`}>
           CERTIFICATIONS
         </h2>
       </div>
-      <div className="space-y-3 ml-4">
+      <div className={`space-y-3 ml-4 ${secondaryFontSizeClass}`}>
         {certifications?.map((cert, index) => (
           <div key={index} className="relative pl-6">
-            <div
-              className="absolute left-0 top-2 w-2 h-2 rotate-45 bg-resume-primary"
-            />
+            <div className="absolute left-0 top-2 w-2 h-2 rotate-45 bg-resume-primary" />
             <div className="flex justify-between">
-              <p className="text-sm font-bold">{cert.name}</p>
-              <p className="text-sm text-gray-600">{cert.completionDate}</p>
+              <p className={`font-bold ${secondaryFontSizeClass}`}>
+                {cert.name}
+              </p>
+              <p className={`text-gray-600 ${secondaryFontSizeClass}`}>
+                {cert.completionDate}
+              </p>
             </div>
           </div>
         ))}
@@ -248,28 +335,26 @@ function CertificationsSection({ resumeData }: ResumeSectionProps) {
   );
 }
 
-
-
-function SkillsSection({ resumeData }: ResumeSectionProps) {
+function SkillsSection({
+  resumeData,
+  primaryFontSizeClass,
+  secondaryFontSizeClass,
+}: ResumeSectionProps) {
   const { skills } = resumeData;
-
   return (
     <section className="relative">
-      <div
-        className="absolute left-5 top-12 bottom-0 w-[1px] bg-resume-primary"
-        // style={{ backgroundColor: `${primaryColor}25` }}
-      />
+      <div className="absolute left-5 top-12 bottom-0 w-[1px] bg-resume-primary" />
       <div className="flex items-center gap-3 mb-4">
         <DiamondIcon Icon={PuzzleIcon} />
-        <h2 className="text-xl font-bold text-resume-primary">Skills</h2>
+        <h2 className={`${primaryFontSizeClass} font-bold text-resume-primary`}>
+          Skills
+        </h2>
       </div>
-      <div className="space-y-3 ml-4">
+      <div className={`space-y-3 ml-4 ${secondaryFontSizeClass}`}>
         {skills?.map((item, index) => (
           <div key={index} className="relative pl-6">
-            <div
-              className="absolute left-0 top-2 w-2 h-2 rotate-45 bg-resume-primary"
-            />
-            <p className="text-sm font-bold">{item}</p>
+            <div className="absolute left-0 top-2 w-2 h-2 rotate-45 bg-resume-primary" />
+            <p className={`font-bold ${secondaryFontSizeClass}`}>{item}</p>
           </div>
         ))}
       </div>
@@ -277,30 +362,41 @@ function SkillsSection({ resumeData }: ResumeSectionProps) {
   );
 }
 
-function SoftwareSection({ resumeData }: ResumeSectionProps) {
+function SoftwareSection({
+  resumeData,
+  primaryFontSizeClass,
+  secondaryFontSizeClass,
+}: ResumeSectionProps) {
   const software = [
     { name: "Microsoft Project", rating: 5, level: "Excellent" },
     { name: "Microsoft Windows Server", rating: 4, level: "Very Good" },
   ];
-
   return (
     <section className="relative">
       <div className="absolute left-5 top-12 bottom-0 w-[1px] bg-gray-200" />
       <div className="flex items-center gap-3 mb-4">
         <DiamondIcon Icon={Award} />
-        <h2 className="text-xl font-bold text-[#2D3748]">Software</h2>
+        <h2 className={`${primaryFontSizeClass} font-bold text-[#2D3748]`}>
+          Software
+        </h2>
       </div>
-      <div className="space-y-3 ml-4">
+      <div className={`space-y-3 ml-4 ${secondaryFontSizeClass}`}>
         {software.map((item, index) => (
           <div
             key={index}
             className="relative pl-6 before:content-[''] before:absolute before:left-0 before:top-2 before:w-2 before:h-2 before:bg-[#2D3748] before:rotate-45"
           >
             <div className="flex items-center justify-between">
-              <p className="text-sm font-bold">{item.name}</p>
+              <p className={`font-bold ${secondaryFontSizeClass}`}>
+                {item.name}
+              </p>
               <div className="flex flex-col items-center gap-2">
                 <RatingDots rating={item.rating} />
-                <span className="text-xs text-gray-600">{item.level}</span>
+                <span
+                  className={`text-xs text-gray-600 ${secondaryFontSizeClass}`}
+                >
+                  {item.level}
+                </span>
               </div>
             </div>
           </div>

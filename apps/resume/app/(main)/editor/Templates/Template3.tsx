@@ -23,6 +23,8 @@ interface ResumePreviewProps {
   className?: string;
   primaryColor?: string;
   secondaryColor?: string;
+  primaryFontSizeClass?: string;
+  secondaryFontSizeClass?: string;
 }
 
 export default function Template3({
@@ -53,6 +55,32 @@ export default function Template3({
     resumeData.references?.length
   );
 
+    const getFontSizeClass = (size: number) => {
+      const sizeMap: Record<number, string> = {
+        12: "text-xs",
+        14: "text-sm",
+        16: "text-base",
+        18: "text-lg",
+        20: "text-xl",
+        24: "text-2xl",
+        30: "text-3xl",
+        36: "text-4xl",
+      };
+      const sizes = Object.keys(sizeMap).map(Number);
+      const closestSize = sizes.reduce((prev, curr) => {
+        return Math.abs(curr - size) < Math.abs(prev - size) ? curr : prev;
+      });
+
+      return sizeMap[closestSize] || "text-base";
+    };
+
+    const primaryFontSize = getFontSizeClass(
+      Number(resumeData.primaryFontSize) || 20
+    );
+    const secondaryFontSize = getFontSizeClass(
+      Number(resumeData.secondaryFontSize) || 16
+    );
+
   return (
     <div
       ref={containerRef}
@@ -81,20 +109,40 @@ export default function Template3({
             {(resumeData.firstName ||
               resumeData.lastName ||
               resumeData.jobTitle) && (
-              <PersonalInfoHeader resumeData={resumeData} />
+              <PersonalInfoHeader
+                resumeData={resumeData}
+                primaryFontSizeClass={primaryFontSize}
+                secondaryFontSizeClass={secondaryFontSize}
+              />
             )}
             {(resumeData.linkedin || resumeData.github) && (
-              <ProfilesSection resumeData={resumeData} />
+              <ProfilesSection
+                resumeData={resumeData}
+                primaryFontSizeClass={primaryFontSize}
+                secondaryFontSizeClass={secondaryFontSize}
+              />
             )}
             {resumeData.summary && <SummarySection resumeData={resumeData} />}
             {(resumeData.workExperiences?.length ?? 0) > 0 && (
-              <ExperienceSection resumeData={resumeData} />
+              <ExperienceSection
+                resumeData={resumeData}
+                primaryFontSizeClass={primaryFontSize}
+                secondaryFontSizeClass={secondaryFontSize}
+              />
             )}
             {(resumeData.educations?.length ?? 0) > 0 && (
-              <EducationSection resumeData={resumeData} />
+              <EducationSection
+                resumeData={resumeData}
+                primaryFontSizeClass={primaryFontSize}
+                secondaryFontSizeClass={secondaryFontSize}
+              />
             )}
             {(resumeData.projects?.length ?? 0) > 0 && (
-              <ProjectsSection resumeData={resumeData} />
+              <ProjectsSection
+                resumeData={resumeData}
+                primaryFontSizeClass={primaryFontSize}
+                secondaryFontSizeClass={secondaryFontSize}
+              />
             )}
           </div>
         )}
@@ -108,12 +156,16 @@ export default function Template3({
                 <SkillsSection
                   resumeData={resumeData}
                   primaryColor={primaryColor}
+                  primaryFontSizeClass={primaryFontSize}
+                  secondaryFontSizeClass={secondaryFontSize}
                 />
               )}
               {(resumeData.certifications?.length ?? 0) > 0 && (
                 <CertificationsSection
                   resumeData={resumeData}
                   primaryColor={primaryColor}
+                  primaryFontSizeClass={primaryFontSize}
+                  secondaryFontSizeClass={secondaryFontSize}
                 />
               )}
               {(resumeData.languages?.length ?? 0) > 0 && (
@@ -121,6 +173,8 @@ export default function Template3({
                   <LanguagesSection
                     resumeData={resumeData}
                     primaryColor={primaryColor}
+                    primaryFontSizeClass={primaryFontSize}
+                    secondaryFontSizeClass={secondaryFontSize}
                   />
                   <hr className="border-t border-gray-300 my-4" />
                 </>
@@ -135,7 +189,11 @@ export default function Template3({
     </div>
   );
 }
-function PersonalInfoHeader({ resumeData }: ResumePreviewProps) {
+function PersonalInfoHeader({
+  resumeData,
+  primaryFontSizeClass,
+  secondaryFontSizeClass,
+}: ResumePreviewProps) {
   const {
     firstName,
     lastName,
@@ -145,7 +203,6 @@ function PersonalInfoHeader({ resumeData }: ResumePreviewProps) {
     phone,
     photo,
     email,
-    website,
     borderStyle,
   } = resumeData;
   const [photoSrc, setPhotoSrc] = useState(photo instanceof File ? "" : photo);
@@ -180,12 +237,18 @@ function PersonalInfoHeader({ resumeData }: ResumePreviewProps) {
       )}
       <div className="space-y-2">
         {(firstName || lastName) && (
-          <h1 className="text-3xl font-bold">
+          <h1 className={`${primaryFontSizeClass} font-bold`}>
             {firstName} {lastName}
           </h1>
         )}
-        {jobTitle && <p className="text-xl text-gray-800">{jobTitle}</p>}
-        <div className="flex flex-wrap gap-4 text-sm text-gray-800">
+        {jobTitle && (
+          <p className={`${secondaryFontSizeClass} text-gray-800`}>
+            {jobTitle}
+          </p>
+        )}
+        <div
+          className={`flex flex-wrap gap-4 ${secondaryFontSizeClass} text-gray-800`}
+        >
           {(city || country) && (
             <div className="flex items-center gap-1">
               <MapPin className="w-4 h-4 text-resume-primary" />
@@ -204,18 +267,8 @@ function PersonalInfoHeader({ resumeData }: ResumePreviewProps) {
           )}
           {email && (
             <div className="flex items-center gap-1">
-              <Mail
-                className="w-4 h-4 text-resume-primary"
-              />
+              <Mail className="w-4 h-4 text-resume-primary" />
               <span>{email}</span>
-            </div>
-          )}
-          {website && (
-            <div className="flex items-center gap-1">
-              <Link2
-                className="w-4 h-4 text-resume-primary"
-              />
-              <span>{website}</span>
             </div>
           )}
         </div>
@@ -224,59 +277,67 @@ function PersonalInfoHeader({ resumeData }: ResumePreviewProps) {
   );
 }
 
-function ProfilesSection({ resumeData }: ResumePreviewProps) {
+function ProfilesSection({
+  resumeData,
+  primaryFontSizeClass,
+  secondaryFontSizeClass,
+}: ResumePreviewProps) {
   const { linkedin, github } = resumeData;
 
   return (
     <section>
-      <h2 className="text-lg font-bold mb-3 border-b border-resume-primary">
+      <h2
+        className={`${primaryFontSizeClass} font-bold mb-3 border-b border-resume-primary`}
+      >
         Profiles
       </h2>
       <div className="flex items-center justify-between">
         <div className="flex flex-col items-center justify-center gap-2">
           <div className="flex items-center gap-2">
             <Linkedin className="w-4 h-4 text-resume-primary" />
-            <span className="text-sm break-all whitespace-pre-wrap">
+            <span
+              className={`${secondaryFontSizeClass} break-all whitespace-pre-wrap`}
+            >
               {linkedin}
             </span>
           </div>
-          <span className="text-sm text-gray-800">LinkedIn</span>
+          <span className={`${secondaryFontSizeClass} text-gray-800`}>
+            LinkedIn
+          </span>
         </div>
         <div className="flex flex-col items-center gap-2">
           <div className="flex items-center gap-2">
             <Github className="w-4 h-4 text-resume-primary" />
-            <span className="text-sm break-all whitespace-pre-wrap">
+            <span
+              className={`${secondaryFontSizeClass} break-all whitespace-pre-wrap`}
+            >
               {github}
             </span>
           </div>
-          <span className="text-sm text-gray-800">GitHub</span>
-        </div>
-        <div className="flex flex-col items-center gap-2">
-          <Link className="w-4 h-4 text-resume-primary" />
-          <div className="flex items-center gap-2">
-            <span className="text-sm">johndoe</span>
-          </div>
-          <span className="text-sm text-gray-800">StackOverflow</span>
+          <span className={`${secondaryFontSizeClass} text-gray-800`}>
+            GitHub
+          </span>
         </div>
       </div>
     </section>
   );
 }
 
-function SummarySection({ resumeData, primaryColor }: ResumeSectionProps) {
+function SummarySection({
+  resumeData,
+  primaryFontSizeClass,
+  secondaryFontSizeClass,
+}: ResumePreviewProps) {
   return (
     <section>
       <h2
-        className="font-semibold text-lg mb-3 border-b border-resume-primary"
+        className={`${primaryFontSizeClass} font-bold mb-3 border-b border-resume-primary`}
       >
         Summary
       </h2>
       <div className="max-w-full overflow-hidden">
-        {/* <p className="text-sm text-gray-800 break-all whitespace-pre-wrap">
-          {resumeData.summary}
-        </p> */}
         <div
-          className="text-sm text-gray-800 summary-content [&_p]:mb-2 [&_ul]:list-disc [&_ul]:ml-4 [&_ol]:list-decimal [&_ol]:ml-4 [&_li]:mb-1 [&_strong]:font-semibold [&_em]:italic break-all whitespace-pre-wrap"
+          className={`${secondaryFontSizeClass} text-gray-800 summary-content [&_p]:mb-2 [&_ul]:list-disc [&_ul]:ml-4 [&_ol]:list-decimal [&_ol]:ml-4 [&_li]:mb-1 [&_strong]:font-semibold [&_em]:italic break-all whitespace-pre-wrap`}
           dangerouslySetInnerHTML={{ __html: resumeData.summary || "" }}
         />
       </div>
@@ -284,13 +345,17 @@ function SummarySection({ resumeData, primaryColor }: ResumeSectionProps) {
   );
 }
 
-function ExperienceSection({ resumeData }: ResumeSectionProps) {
+function ExperienceSection({
+  resumeData,
+  primaryFontSizeClass,
+  secondaryFontSizeClass,
+}: ResumePreviewProps) {
   const { workExperiences } = resumeData;
 
   return (
     <section>
       <h2
-        className="text-lg font-bold mb-3 border-b border-resume-primary"
+        className={`${primaryFontSizeClass} font-bold mb-3 border-b border-resume-primary`}
       >
         Experience
       </h2>
@@ -299,20 +364,28 @@ function ExperienceSection({ resumeData }: ResumeSectionProps) {
           <div key={index}>
             <div className="flex justify-between mb-1">
               <div>
-                <h3 className="font-bold">{exp.company}</h3>
-                <p className="text-sm text-gray-800">{exp.position}</p>
+                <h3 className={`${primaryFontSizeClass} font-bold`}>
+                  {exp.company}
+                </h3>
+                <p className={`${secondaryFontSizeClass} text-gray-800`}>
+                  {exp.position}
+                </p>
               </div>
               <div className="text-right">
-                <p className="text-sm">
+                <p className={secondaryFontSizeClass}>
                   {exp.startDate && formatDate(exp.startDate, "MMMM yyyy")} -{" "}
                   {exp.endDate
                     ? formatDate(exp.endDate, "MMMM yyyy")
                     : "Present"}
                 </p>
-                <p className="text-sm text-gray-800">{exp.location}</p>
+                <p className={`${secondaryFontSizeClass} text-gray-800`}>
+                  {exp.location}
+                </p>
               </div>
             </div>
-            <ul className="list-disc list-inside text-sm text-gray-800">
+            <ul
+              className={`list-disc list-inside ${secondaryFontSizeClass} text-gray-800`}
+            >
               {exp.description
                 ?.split("\n")
                 .map((item, i) => <li key={i}>{item}</li>)}
@@ -324,13 +397,17 @@ function ExperienceSection({ resumeData }: ResumeSectionProps) {
   );
 }
 
-function EducationSection({ resumeData }: ResumeSectionProps) {
+function EducationSection({
+  resumeData,
+  primaryFontSizeClass,
+  secondaryFontSizeClass,
+}: ResumePreviewProps) {
   const { educations } = resumeData;
 
   return (
     <section>
       <h2
-        className="text-lg font-bold mb-3 border-b border-resume-primary"
+        className={`${primaryFontSizeClass} font-bold mb-3 border-b border-resume-primary`}
       >
         Education
       </h2>
@@ -338,15 +415,18 @@ function EducationSection({ resumeData }: ResumeSectionProps) {
         <div key={index} className="mb-4">
           <div className="flex justify-between">
             <div>
-              <h3 className="font-bold">{edu.school}</h3>
-              <p className="text-sm text-gray-800">{edu.degree}</p>
+              <h3 className={`${primaryFontSizeClass} font-bold`}>
+                {edu.school}
+              </h3>
+              <p className={`${secondaryFontSizeClass} text-gray-800`}>
+                {edu.degree}
+              </p>
             </div>
             <div className="text-right">
-              <p className="text-sm">
+              <p className={secondaryFontSizeClass}>
                 {edu.startDate && formatDate(edu.startDate, "MMMM yyyy")} -{" "}
                 {edu.endDate ? formatDate(edu.endDate, "MMMM yyyy") : "Present"}
               </p>
-              {/* <p className="text-sm text-gray-600">{edu.location}</p> */}
             </div>
           </div>
         </div>
@@ -355,22 +435,32 @@ function EducationSection({ resumeData }: ResumeSectionProps) {
   );
 }
 
-function ProjectsSection({ resumeData, primaryColor }: ResumeSectionProps) {
+function ProjectsSection({
+  resumeData,
+  primaryFontSizeClass,
+  secondaryFontSizeClass,
+}: ResumePreviewProps) {
   const { projects } = resumeData;
 
   return (
     <section>
       <h2
-        className="text-lg font-bold mb-3 border-b border-resume-primary"
+        className={`${primaryFontSizeClass} font-bold mb-3 border-b border-resume-primary`}
       >
         Projects
       </h2>
       <div className="grid grid-cols-2 gap-4">
         {projects?.map((project, index) => (
           <div key={index}>
-            <h3 className="font-bold">{project.name}</h3>
-            <p className="text-sm text-gray-800">{project.role}</p>
-            <p className="text-sm text-gray-800 break-all whitespace-pre-wrap">
+            <h3 className={`${primaryFontSizeClass} font-bold`}>
+              {project.name}
+            </h3>
+            <p className={`${secondaryFontSizeClass} text-gray-800`}>
+              {project.role}
+            </p>
+            <p
+              className={`${secondaryFontSizeClass} text-gray-800 break-all whitespace-pre-wrap`}
+            >
               {project.description}
             </p>
           </div>
@@ -380,27 +470,39 @@ function ProjectsSection({ resumeData, primaryColor }: ResumeSectionProps) {
   );
 }
 
-function SkillsSection({ resumeData }: ResumeSectionProps) {
+function SkillsSection({
+  resumeData,
+  primaryFontSizeClass,
+  secondaryFontSizeClass,
+}: ResumePreviewProps) {
   const { skills } = resumeData;
 
   return (
     <section>
-      <h2 className="text-xl font-bold mb-3 border-b border-white">Skills</h2>
+      <h2
+        className={`${primaryFontSizeClass} font-bold mb-3 border-b border-white`}
+      >
+        Skills
+      </h2>
       <div className="space-y-4">
         {Array.isArray(skills) &&
           skills.map((skill, index) => {
             if (typeof skill === "string") {
               return (
                 <div key={index}>
-                  <p className="text-sm">{skill}</p>
+                  <p className={secondaryFontSizeClass}>{skill}</p>
                 </div>
               );
             } else {
               return (
                 <div key={index}>
-                  <h3 className="font-bold mb-1">{skill.category}</h3>
-                  <p className="text-sm">{skill.level}</p>
-                  <p className="text-sm">{skill.items.join(", ")}</p>
+                  <h3 className={`${primaryFontSizeClass} font-bold mb-1`}>
+                    {skill.category}
+                  </h3>
+                  <p className={secondaryFontSizeClass}>{skill.level}</p>
+                  <p className={secondaryFontSizeClass}>
+                    {skill.items.join(", ")}
+                  </p>
                 </div>
               );
             }
@@ -410,20 +512,32 @@ function SkillsSection({ resumeData }: ResumeSectionProps) {
   );
 }
 
-function CertificationsSection({ resumeData }: ResumeSectionProps) {
+function CertificationsSection({
+  resumeData,
+  primaryFontSizeClass,
+  secondaryFontSizeClass,
+}: ResumePreviewProps) {
   const { certifications } = resumeData;
   return (
     <section>
-      <h2 className="text-lg font-bold mb-3 border-b border-white">
+      <h2
+        className={`${primaryFontSizeClass} font-bold mb-3 border-b border-white`}
+      >
         Certifications
       </h2>
       <div className="space-y-2">
         {certifications?.map((cert, index) => (
           <div key={index}>
-            {cert.name && <h3 className="font-bold text-md">{cert.name}</h3>}
-            {cert.source && <p className="text-md text-white">{cert.source}</p>}
+            {cert.name && (
+              <h3 className={`${primaryFontSizeClass} font-bold`}>
+                {cert.name}
+              </h3>
+            )}
+            {cert.source && (
+              <p className={secondaryFontSizeClass}>{cert.source}</p>
+            )}
             {cert.completionDate && (
-              <p className="text-md text-white font-bold">
+              <p className={`${secondaryFontSizeClass} font-bold`}>
                 {formatDate(cert.completionDate, "yyyy")}
               </p>
             )}
@@ -434,18 +548,24 @@ function CertificationsSection({ resumeData }: ResumeSectionProps) {
   );
 }
 
-function LanguagesSection({ resumeData }: ResumeSectionProps) {
+function LanguagesSection({
+  resumeData,
+  primaryFontSizeClass,
+  secondaryFontSizeClass,
+}: ResumePreviewProps) {
   const { languages } = resumeData;
   return (
     <section>
-      <h2 className="text-lg font-bold mb-3 border-b border-white">
+      <h2
+        className={`${primaryFontSizeClass} font-bold mb-3 border-b border-white`}
+      >
         Languages
       </h2>
       <div className="space-y-2">
         {languages?.map((lang, index) => (
           <div key={index}>
-            <h3 className="font-bold text-md">{lang.name}</h3>
-            <p className="text-md text-white">{lang.proficiency}</p>
+            <h3 className={`${primaryFontSizeClass} font-bold`}>{lang.name}</h3>
+            <p className={secondaryFontSizeClass}>{lang.proficiency}</p>
           </div>
         ))}
       </div>
@@ -453,13 +573,19 @@ function LanguagesSection({ resumeData }: ResumeSectionProps) {
   );
 }
 
-function ReferencesSection({ resumeData }: ResumeSectionProps) {
+function ReferencesSection({
+  resumeData,
+  primaryFontSizeClass,
+  secondaryFontSizeClass,
+}: ResumePreviewProps) {
   return (
     <section>
-      <h2 className="text-lg font-bold mb-3 border-b border-white">
+      <h2
+        className={`${primaryFontSizeClass} font-bold mb-3 border-b border-white`}
+      >
         References
       </h2>
-      <p className="text-sm">Available upon request</p>
+      <p className={secondaryFontSizeClass}>Available upon request</p>
     </section>
   );
 }
